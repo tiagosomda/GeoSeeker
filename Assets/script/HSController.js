@@ -13,8 +13,8 @@ var hs_get : WWW;
 var hs_post: WWW;
 
 //Add our URL
-var addMissionUrl  = "http://localhost/unity_test/addlandmark.php?"; 
-var getMissionUrl = "http://localhost/unity_test/getLandmark.php";    
+var addMissionUrl  = "http://www.tiagosomda.com/geoseeker/addlandmark.php?"; 
+var getMissionUrl = "http://www.tiagosomda.com/geoseeker/getLandmark.php";   
 
 // Secret Key matching on server-side script
 private var secretKey = "mySecretKey"; 
