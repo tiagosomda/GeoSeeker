@@ -44,9 +44,9 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Script\HSController.js" />
-     <Compile Include="Assets\Script\Md5.js" />
-     <Compile Include="Assets\Script\UserInterface.js" />
+     <Compile Include="Assets\scripts\HSController.js" />
+     <Compile Include="Assets\scripts\Md5.js" />
+     <Compile Include="Assets\scripts\UserInterface.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
