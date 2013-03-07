@@ -5,11 +5,11 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{F5D42C65-9657-B43F-2228-A3F08DC629E7}</ProjectGuid>
+	<ProjectGuid>{87B7692D-3C0E-6662-9FA1-CC7553D17487}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
-	<AssemblyName>Assembly-UnityScript</AssemblyName>
+	<AssemblyName>Assembly-CSharp</AssemblyName>
 	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
 	<FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -44,14 +44,8 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\scripts\GUI\LeaderBoardScreen.js" />
-     <Compile Include="Assets\scripts\GUI\MissionScreen.js" />
-     <Compile Include="Assets\scripts\GUI\ProfileScreen.js" />
-     <Compile Include="Assets\scripts\GUI\ScreenController.js" />
-     <Compile Include="Assets\scripts\LocationController.js" />
-     <Compile Include="Assets\scripts\Md5.js" />
-     <Compile Include="Assets\scripts\ServerController.js" />
-     <Compile Include="Assets\scripts\UserInterface.js" />
+     <Compile Include="Assets\GoogleMaps\Scripts\GoogleMap.cs" />
+     <None Include="Assets\GoogleMaps\README.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

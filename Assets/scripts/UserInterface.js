@@ -1,6 +1,6 @@
 //Controller GameObject
 var ServerController : GameObject;
-private var client : HSController;
+private var client : ServerController;
 
 //GUI Variables
 var skin : GUISkin;
@@ -65,7 +65,7 @@ var maxButtonWidth;
 //This function gets called when the scene (game starts)
 function Start() {
 	//Sets variable that can call HS Controller
-	this.client = ServerController.GetComponent("HSController") as HSController;
+	this.client = ServerController.GetComponent("ServerController") as ServerController;
 	maxButtonWidth = Screen.width/topBarMenuBtnsName.Length;
 
 	//Sets Current Page

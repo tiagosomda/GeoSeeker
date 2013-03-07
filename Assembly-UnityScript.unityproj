@@ -44,8 +44,13 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\scripts\HSController.js" />
+     <Compile Include="Assets\scripts\GUI\LeaderBoardScreen.js" />
+     <Compile Include="Assets\scripts\GUI\MissionScreen.js" />
+     <Compile Include="Assets\scripts\GUI\ProfileScreen.js" />
+     <Compile Include="Assets\scripts\GUI\ScreenController.js" />
+     <Compile Include="Assets\scripts\LocationController.js" />
      <Compile Include="Assets\scripts\Md5.js" />
+     <Compile Include="Assets\scripts\ServerController.js" />
      <Compile Include="Assets\scripts\UserInterface.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
