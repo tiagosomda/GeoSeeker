@@ -11,11 +11,13 @@ var missionInfo : String; //BAD NAME
 var missionText = "";
 var hs_get : WWW;
 var hs_post: WWW;
+var currentMissionDetails : String;
 
 //Add our URL
 var addMissionUrl : String;
 var getMissionUrl : String;
 var deleteMissionUrl : String;
+var getMissionDetailsUrl : String;
 
 // Secret Key matching on server-side script
 private var secretKey = "mySecretKey"; 
@@ -28,6 +30,7 @@ function Start() {
 	addMissionUrl  = "http://www.tiagosomda.com/geoseeker/addLandmark.php?"; 
 	getMissionUrl = "http://www.tiagosomda.com/geoseeker/getLandmark.php";
 	deleteMissionUrl =   "http://www.tiagosomda.com/geoseeker/deleteLandmark.php?"; 
+	getMissionDetailsUrl =   "http://www.tiagosomda.com/geoseeker/getMissionDetails.php?"; 
 
     missionName = 'NNNN';
 	latitude  = Random.Range(-100,100);
@@ -95,13 +98,17 @@ function deleteMission(n : String) {
 	
 }
 
+function getMissionDetails(id : String) {
+	var getMissionDetailsUrl = getMissionDetailsUrl + "id="+id;
+	hs_post = WWW(getMissionUrl);
+	
+	yield hs_post;
+	
+	if(hs_post.error) {
+        print("There was an error deleting the mission: " + hs_post.error);
+        print(hs_post.text);
+    } else {
+        currentMissionDetails = hs_post.text;
+    }
 
-function createMissionTest(n : String, d : String, t : String, lat : double, longi : double, alti : double, hAccur : double) {
-    var addMissionUrl = addMissionUrl   + "name="      	+ WWW.EscapeURL(n) 
-    									+ "&latitude=" 	+ lat 
-    									+ "&longitude=" + longi
-    									+ "&altitude=" 	+ alti
-    									+ "&horizontalAccuracy=" + hAccur
-                                    	+ "&landmarkInfo=" 		 + WWW.EscapeURL(d);
-	print (addMissionUrl);
 }

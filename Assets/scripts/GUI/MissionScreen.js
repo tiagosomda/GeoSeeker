@@ -4,12 +4,14 @@ var screen : ScreenController;
 var server : ServerController;
 var location : LocationController;
 
-enum MissionsPage { viewMissions, AddMission}
+enum MissionsPage { viewMissions, AddMission, viewSingleMission}
 var currentPage : MissionsPage;
 
 var newMissionName : String;
 var newMissionDescriptions : String;
 var newMissionTags : String;
+
+var viewingMissionsId : String;
 
 function Start () {
 	yield server.updateMissions();
@@ -29,14 +31,16 @@ function draw () {
 	GUI.Box(new Rect(0,screen.rowHeight*2 - screen.rowHeight/2, Screen.width, screen.rowHeight*9),"");
 	
 	if (currentPage == MissionsPage.AddMission) {
-		
 		if(GUI.Button(new Rect(0,screen.rowHeight, Screen.width, screen.rowHeight/2), "View Missions")) {currentPage = MissionsPage.viewMissions;}
 		addMissionScreen();
-	} else {
+	} else if(currentPage == MissionsPage.viewMissions){
 		if(GUI.Button(new Rect(0,screen.rowHeight, Screen.width*.5, screen.rowHeight/2), "Refresh")) {refreshMissionList();}
 		if(GUI.Button(new Rect(Screen.width*.5,screen.rowHeight, Screen.width*.5, screen.rowHeight/2), "Add Mission")) {currentPage = MissionsPage.AddMission;}
 		viewMissionsScreen();
-	} 
+	} else if(currentPage == MissionsPage.viewSingleMission) {
+		showSingleMission(viewingMissionsId);
+		if(GUI.Button(new Rect(0,screen.rowHeight, Screen.width, screen.rowHeight/2), "Back")) {currentPage = MissionsPage.viewMissions;}
+	}
 }
 
 
@@ -47,7 +51,8 @@ function viewMissionsScreen() {
 		for (i = 0; i < records.Length -1; i++) {
 			var recordData = records[i].Split(','[0]);	
 		   	if(GUI.Button(new Rect(0,screen.rowHeight*(i + 2) - screen.rowHeight/2, Screen.width*0.1, screen.rowHeight), "X")){deleteMission(recordData[0]);}
-		   	GUI.Button(new Rect(Screen.width*0.1,screen.rowHeight*(i + 2) - screen.rowHeight/2, Screen.width*0.8, screen.rowHeight), recordData[0]);
+		   	if(GUI.Button(new Rect(Screen.width*0.1,screen.rowHeight*(i + 2) - screen.rowHeight/2, Screen.width*0.8, screen.rowHeight), recordData[0])){viewingMissionsId=recordData[1]; 	currentPage = MissionsPage.viewSingleMission;
+;showSingleMission(recordData[1]);}
 			if(GUI.Button(new Rect(Screen.width*0.9,screen.rowHeight*(i + 2) - screen.rowHeight/2, Screen.width*0.1, screen.rowHeight), "V")){checkMissionLocation();}
 		}
 	} else {
@@ -90,6 +95,12 @@ function submitMission() {
 function deleteMission(n : String) {
 	server.deleteMission(n);
 	yield server.updateMissions();
+}
+
+function showSingleMission(id : String) {
+	if(GUI.Button(new Rect(Screen.width*0.1,screen.rowHeight*(2) - screen.rowHeight/2, Screen.width*0.8, screen.rowHeight), id)){}
+	print(id);
+	
 }
 
 function checkMissionLocation() {
