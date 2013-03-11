@@ -100,7 +100,7 @@ function deleteMission(n : String) {
 
 function getMissionDetails(id : String) {
 	var getMissionDetailsUrl = getMissionDetailsUrl + "id="+id;
-	hs_post = WWW(getMissionUrl);
+	hs_post = WWW(getMissionDetailsUrl);
 	
 	yield hs_post;
 	
