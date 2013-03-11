@@ -12,6 +12,7 @@ var newMissionDescriptions : String;
 var newMissionTags : String;
 
 var viewingMissionsId : String;
+var lastDistance : double;
 
 function Start () {
 	yield server.updateMissions();
@@ -55,6 +56,7 @@ function viewMissionsScreen() {
 		   		viewingMissionsId=recordData[1]; 	
 		   		currentPage = MissionsPage.viewSingleMission;
 		   		yield server.getMissionDetails(recordData[1]);
+		   		yield location.getLocation();
 		   		viewSingleMission(recordData[1]);
 		   	}
 			if(GUI.Button(new Rect(Screen.width*0.9,screen.rowHeight*(i + 2) - screen.rowHeight/2, Screen.width*0.1, screen.rowHeight), "V")){checkMissionLocation();}
@@ -102,11 +104,41 @@ function deleteMission(n : String) {
 }
 
 function viewSingleMission(id : String) {
-	if(GUI.Button(new Rect(Screen.width*0.1,screen.rowHeight*(2) - screen.rowHeight/2, Screen.width*0.8, screen.rowHeight), id)){}
+	if(GUI.Button(new Rect(0,screen.rowHeight*(2) - screen.rowHeight/2, Screen.width, screen.rowHeight), id)){}
 	print(server.currentMissionDetails);
+	checkMissionLocation();
+	if(GUI.Button(new Rect(0,screen.rowHeight*(3) - screen.rowHeight/2, Screen.width, screen.rowHeight), lastDistance.ToString())){}
+	if (lastDistance < 0.01) {
+			if(GUI.Button(new Rect(0,screen.rowHeight*(4) - screen.rowHeight/2, Screen.width, screen.rowHeight), "Within Range")){}
+	} else {
+			if(GUI.Button(new Rect(0,screen.rowHeight*(4) - screen.rowHeight/2, Screen.width, screen.rowHeight), "Womp Womp...")){}
+	}
+	
+
+	
 	
 }
 
 function checkMissionLocation() {
+	var recordData = server.currentMissionDetails.Split(','[0]);
+	
+	lastDistance = getDistance(Input.location.lastData.latitude,Input.location.lastData.longitude,
+					       float.Parse(recordData[2]), float.Parse(recordData[3]));
+	print(lastDistance);
+		
+}
 
+function Rad(d : double) {
+	return d* Mathf.PI / 180;
+}
+
+function getDistance(lat1: double, lng1 : double, lat2 : double, lng2 :double) {
+	var radLat1 = Rad(lat1);
+	var radLat2 = Rad(lat2);
+	var a = radLat1 - radLat2; 
+	var b = Rad(lng1) - Rad(lng2);
+	var s = 2 * Mathf.Asin(Mathf.Sqrt(Mathf.Pow(Mathf.Sin(a/2),2) + 
+	Mathf.Cos(radLat1)*Mathf.Cos(radLat2)*Mathf.Pow(Mathf.Sin(b/2),2)));
+	s = s*6378.137;
+	return s;
 }
