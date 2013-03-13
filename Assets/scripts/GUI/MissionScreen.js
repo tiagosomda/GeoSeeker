@@ -106,10 +106,11 @@ function deleteMission(n : String) {
 function viewSingleMission(id : String) {
 //	if(GUI.Button(new Rect(0,screen.rowHeight*(2) - screen.rowHeight/2, Screen.width, screen.rowHeight), id)){}
 	checkMissionLocation();
+	var recordData = server.currentMissionDetails.Split(','[0]);
 	
 	if (lastDistance < 0.01) {
 			GUI.Label(new Rect(Screen.width*.25,screen.rowHeight*2, Screen.width,	 screen.rowHeight), "In Range!");	
-		if(GUI.Button(new Rect(Screen.width*.25,screen.rowHeight*2.5, Screen.width*.5, screen.rowHeight/2), "Complete Mission")){}
+		if(GUI.Button(new Rect(Screen.width*.25,screen.rowHeight*2.5, Screen.width*.5, screen.rowHeight/2), "Complete Mission")){server.completeMission('111', recordData[0]);}
 		if(GUI.Button(new Rect(Screen.width*.25,screen.rowHeight*3, Screen.width*.5, screen.rowHeight/2), "Update Location")){yield location.getLocation();}
 	} else {	
 		if (lastDistance > 1) {
