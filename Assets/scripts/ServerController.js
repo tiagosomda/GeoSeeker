@@ -30,7 +30,9 @@ function Start() {
 	addMissionUrl  = "http://www.tiagosomda.com/geoseeker/addLandmark.php?"; 
 	getMissionUrl = "http://www.tiagosomda.com/geoseeker/getLandmark.php";
 	deleteMissionUrl =   "http://www.tiagosomda.com/geoseeker/deleteLandmark.php?"; 
-	getMissionDetailsUrl =   "http://www.tiagosomda.com/geoseeker/getMissionDetails.php?"; 
+	getMissionDetailsUrl =   "http://www.tiagosomda.com/geoseeker/getMissionDetails.php?";
+	completeMissionUrl = "http://www.tiagosomda.com/geoseeker/completeMission.php?";
+	
 
     missionName = 'NNNN';
 	latitude  = Random.Range(-100,100);
