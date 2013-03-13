@@ -115,3 +115,17 @@ function getMissionDetails(id : String) {
     }
 
 }
+
+function completeMission(userId : String, missionId : String){
+	var completeMissionUrl = completeMissionUrl + "userId="+userId+"&missionId="+missionId;
+	hs_post = WWW(completeMissionUrl);
+	
+	yield hs_post;
+	
+	if(hs_post.error) {
+        print("There was an error compeleting the mission: " + hs_post.error);
+        print(hs_post.text);
+    } else {
+        print("No error: " + hs_post.text);
+    }
+}
