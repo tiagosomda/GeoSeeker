@@ -104,19 +104,42 @@ function deleteMission(n : String) {
 }
 
 function viewSingleMission(id : String) {
-	if(GUI.Button(new Rect(0,screen.rowHeight*(2) - screen.rowHeight/2, Screen.width, screen.rowHeight), id)){}
-	print(server.currentMissionDetails);
+//	if(GUI.Button(new Rect(0,screen.rowHeight*(2) - screen.rowHeight/2, Screen.width, screen.rowHeight), id)){}
 	checkMissionLocation();
-	if(GUI.Button(new Rect(0,screen.rowHeight*(3) - screen.rowHeight/2, Screen.width, screen.rowHeight), lastDistance.ToString())){}
+	
 	if (lastDistance < 0.01) {
-			if(GUI.Button(new Rect(0,screen.rowHeight*(4) - screen.rowHeight/2, Screen.width, screen.rowHeight), "Within Range")){}
-	} else {
-			if(GUI.Button(new Rect(0,screen.rowHeight*(4) - screen.rowHeight/2, Screen.width, screen.rowHeight), "Womp Womp...")){}
+			GUI.Label(new Rect(Screen.width*.25,screen.rowHeight*2, Screen.width,	 screen.rowHeight), "In Range!");	
+		if(GUI.Button(new Rect(Screen.width*.25,screen.rowHeight*2.5, Screen.width*.5, screen.rowHeight/2), "Complete Mission")){}
+		if(GUI.Button(new Rect(Screen.width*.25,screen.rowHeight*3, Screen.width*.5, screen.rowHeight/2), "Update Location")){yield location.getLocation();}
+	} else {	
+		if (lastDistance > 1) {
+			var d1 : int;
+			d1 = lastDistance -0.01;
+			GUI.Label(new Rect(Screen.width*.25,screen.rowHeight*2, Screen.width,	 screen.rowHeight), d1 + " km away");		
+			if(GUI.Button(new Rect(Screen.width*.25,screen.rowHeight*2.5, Screen.width*.5, screen.rowHeight/2), "Update Location")){yield location.getLocation();}
+		} else {
+			var d2 : int;
+			d2 = (lastDistance -0.01);
+			GUI.Label(new Rect(Screen.width*.25,screen.rowHeight*2, Screen.width,	 screen.rowHeight), d2*1000 + " meters away");
+			if(GUI.Button(new Rect(Screen.width*.25,screen.rowHeight*2.5, Screen.width*.5, screen.rowHeight/2), "Update Location")){yield location.getLocation();}	
+		}
 	}
-	
 
+	//Mission Location
+	var recordData = server.currentMissionDetails.Split(','[0]);
+	GUI.Label(new Rect(Screen.width*.1,screen.rowHeight*4, Screen.width,	 screen.rowHeight), recordData[1] + " Location:");
+	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*4.5, Screen.width*.9, screen.rowHeight), "Latitude: " + recordData[2]);
+	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*5, Screen.width*.9, screen.rowHeight), "Longitute: "  + recordData[3]);
+	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*5.5, Screen.width*.9, screen.rowHeight), "Altitude: "  + recordData[4]);
+	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*6, Screen.width*.9, screen.rowHeight), "Horizontal Accuracy: "  + recordData[5]);	
 	
-	
+	//Current Location
+	GUI.Label(new Rect(Screen.width*.1,screen.rowHeight*7, Screen.width,	 screen.rowHeight), "Current Location:");
+	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*7.5, Screen.width*.9, screen.rowHeight), "Latitude: " + Input.location.lastData.latitude);
+	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*8, Screen.width*.9, screen.rowHeight), "Longitute: "  + Input.location.lastData.longitude);
+	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*8.5, Screen.width*.9, screen.rowHeight), "Altitude: "  + Input.location.lastData.altitude);
+	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*9, Screen.width*.9, screen.rowHeight), "Horizontal Accuracy: "  + Input.location.lastData.horizontalAccuracy);	
+
 }
 
 function checkMissionLocation() {
