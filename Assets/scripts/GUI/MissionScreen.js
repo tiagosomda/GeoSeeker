@@ -114,13 +114,13 @@ function viewSingleMission(id : String) {
 	} else {	
 		if (lastDistance > 1) {
 			var d1 : int;
-			d1 = lastDistance -0.01;
+			d1 = lastDistance;
 			GUI.Label(new Rect(Screen.width*.25,screen.rowHeight*2, Screen.width,	 screen.rowHeight), d1 + " km away");		
 			if(GUI.Button(new Rect(Screen.width*.25,screen.rowHeight*2.5, Screen.width*.5, screen.rowHeight/2), "Update Location")){yield location.getLocation();}
 		} else {
 			var d2 : int;
-			d2 = (lastDistance -0.01);
-			GUI.Label(new Rect(Screen.width*.25,screen.rowHeight*2, Screen.width,	 screen.rowHeight), d2*1000 + " meters away");
+			d2 = lastDistance*1000;
+			GUI.Label(new Rect(Screen.width*.25,screen.rowHeight*2, Screen.width,	 screen.rowHeight), d2 + " meters away");
 			if(GUI.Button(new Rect(Screen.width*.25,screen.rowHeight*2.5, Screen.width*.5, screen.rowHeight/2), "Update Location")){yield location.getLocation();}	
 		}
 	}
