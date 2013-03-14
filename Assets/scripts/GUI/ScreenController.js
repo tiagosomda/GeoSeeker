@@ -24,8 +24,8 @@ function Start () {
 	updateRowAndColSize();
 	currentOrientation = Input.deviceOrientation;
 			
-	Profile.SetActive(true);
-	Mission.SetActive(false);
+	Profile.SetActive(false);
+	Mission.SetActive(true);
 	Leaderboard.SetActive(false);
 }
 
@@ -60,7 +60,7 @@ function OnGUI() {
 }
 
 function drawTopBar() {		
-	if(GUI.Button(new Rect(0,0, rowWidth,rowHeight),"Profile")){switchScreen(Profile);}
+	if(GUI.Button(new Rect(0,0, rowWidth,rowHeight),"Profile")){ switchScreen(Profile);}
 	if(GUI.Button(new Rect(rowWidth,0,rowWidth,rowHeight),"Mission")){switchScreen(Mission);}
 	if(GUI.Button(new Rect(rowWidth*2,0,rowWidth,rowHeight),"Leaderboard")){switchScreen(Leaderboard);}
 }
@@ -68,6 +68,7 @@ function drawTopBar() {
 function switchScreen(clicked : GameObject) {
 	switch(clicked) {
 		case Profile:
+			server.getUserInfo(); 
 			Profile.SetActive(true); 	 topTabBtnsState[0] = btnActiveStyleName; 
 			Mission.SetActive(false); 	 topTabBtnsState[1] = btnInactiveStyleName;
 			Leaderboard.SetActive(false);topTabBtnsState[2] = btnInactiveStyleName;

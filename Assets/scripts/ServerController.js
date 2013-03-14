@@ -12,6 +12,7 @@ var missionText = "";
 var hs_get : WWW;
 var hs_post: WWW;
 var currentMissionDetails : String;
+var userInfo : String;
 
 //Add our URL
 var addMissionUrl : String;
@@ -19,6 +20,7 @@ var getMissionUrl : String;
 var deleteMissionUrl : String;
 var getMissionDetailsUrl : String;
 var completeMissionUrl : String;
+var getUserInfoUrl : String;
 
 // Secret Key matching on server-side script
 private var secretKey = "mySecretKey"; 
@@ -33,6 +35,7 @@ function Start() {
 	deleteMissionUrl =   "http://www.tiagosomda.com/geoseeker/deleteLandmark.php?"; 
 	getMissionDetailsUrl =   "http://www.tiagosomda.com/geoseeker/getMissionDetails.php?";
 	completeMissionUrl = "http://www.tiagosomda.com/geoseeker/completeMission.php?";
+	getUserInfoUrl = "http://www.tiagosomda.com/geoseeker/getUserInformation.php?";
 	
 
     missionName = 'NNNN';
@@ -124,8 +127,19 @@ function completeMission(userId : String, missionId : String){
 	
 	if(hs_post.error) {
         print("There was an error compeleting the mission: " + hs_post.error);
-        print(hs_post.text);
     } else {
         print("No error: " + hs_post.text);
+    }
+}
+
+function getUserInfo(){
+	var getUserInfoUrl = getUserInfoUrl + "id=111";
+	hs_post = WWW(getUserInfoUrl);
+	yield hs_post;
+	
+	if(hs_post.error) {
+        print("There was an error compeleting the mission: " + hs_post.error);
+    } else {
+        userInfo = hs_post.text;
     }
 }

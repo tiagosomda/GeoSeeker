@@ -78,7 +78,7 @@ function addMissionScreen() {
 	GUI.Label(new Rect(Screen.width*.1,screen.rowHeight*7, Screen.width*.9, screen.rowHeight), "Latitude: " + Input.location.lastData.latitude);
 	GUI.Label(new Rect(Screen.width*.1,screen.rowHeight*7.5, Screen.width*.9, screen.rowHeight), "Longitute: "  + Input.location.lastData.longitude);
 	GUI.Label(new Rect(Screen.width*.1,screen.rowHeight*8, Screen.width*.9, screen.rowHeight), "Altitude: "  + Input.location.lastData.altitude);
-	GUI.Label(new Rect(Screen.width*.1,screen.rowHeight*8.5, Screen.width*.9, screen.rowHeight), "Horizontal Accuracy: "  + Input.location.lastData.horizontalAccuracy);
+	//GUI.Label(new Rect(Screen.width*.1,screen.rowHeight*8.5, Screen.width*.9, screen.rowHeight), "Horizontal Accuracy: "  + Input.location.lastData.horizontalAccuracy);
 	
 	if(GUI.Button(new Rect(Screen.width*0.1,screen.rowHeight*9,screen.rowWidth*1.2,screen.rowHeight/2), "Update Loc")){location.getLocation();}
 	if(GUI.Button(new Rect(Screen.width*0.5,screen.rowHeight*9,screen.rowWidth*1.2,screen.rowHeight/2), "Submit Mission")){submitMission();}
@@ -104,7 +104,6 @@ function deleteMission(n : String) {
 }
 
 function viewSingleMission(id : String) {
-//	if(GUI.Button(new Rect(0,screen.rowHeight*(2) - screen.rowHeight/2, Screen.width, screen.rowHeight), id)){}
 	checkMissionLocation();
 	var recordData = server.currentMissionDetails.Split(','[0]);
 	
@@ -127,19 +126,18 @@ function viewSingleMission(id : String) {
 	}
 
 	//Mission Location
-	var recordData = server.currentMissionDetails.Split(','[0]);
 	GUI.Label(new Rect(Screen.width*.1,screen.rowHeight*4, Screen.width,	 screen.rowHeight), recordData[1] + " Location:");
 	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*4.5, Screen.width*.9, screen.rowHeight), "Latitude: " + recordData[2]);
 	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*5, Screen.width*.9, screen.rowHeight), "Longitute: "  + recordData[3]);
 	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*5.5, Screen.width*.9, screen.rowHeight), "Altitude: "  + recordData[4]);
-	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*6, Screen.width*.9, screen.rowHeight), "Horizontal Accuracy: "  + recordData[5]);	
+	//GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*6, Screen.width*.9, screen.rowHeight), "Horizontal Accuracy: "  + recordData[5]);	
 	
 	//Current Location
 	GUI.Label(new Rect(Screen.width*.1,screen.rowHeight*7, Screen.width,	 screen.rowHeight), "Current Location:");
 	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*7.5, Screen.width*.9, screen.rowHeight), "Latitude: " + Input.location.lastData.latitude);
 	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*8, Screen.width*.9, screen.rowHeight), "Longitute: "  + Input.location.lastData.longitude);
 	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*8.5, Screen.width*.9, screen.rowHeight), "Altitude: "  + Input.location.lastData.altitude);
-	GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*9, Screen.width*.9, screen.rowHeight), "Horizontal Accuracy: "  + Input.location.lastData.horizontalAccuracy);	
+	//GUI.Label(new Rect(Screen.width*.15,screen.rowHeight*9, Screen.width*.9, screen.rowHeight), "Horizontal Accuracy: "  + Input.location.lastData.horizontalAccuracy);	
 
 }
 
