@@ -13,6 +13,7 @@ var newMissionTags : String;
 
 var viewingMissionsId : String;
 var lastDistance : double;
+var currentPlayerId : int;
 
 function Start () {
 	yield server.updateMissions();

@@ -21,6 +21,7 @@ var deleteMissionUrl : String;
 var getMissionDetailsUrl : String;
 var completeMissionUrl : String;
 var getUserInfoUrl : String;
+var currentPlayerId : int;
 
 // Secret Key matching on server-side script
 private var secretKey = "mySecretKey"; 
