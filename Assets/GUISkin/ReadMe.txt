@@ -1,0 +1,1 @@
+This is skin is made with strong inspiration from the look of the ControlP5 GUI Lib for Proce55ing - http://www.sojamo.de/libraries/controlP5/

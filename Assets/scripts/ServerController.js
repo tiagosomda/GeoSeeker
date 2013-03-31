@@ -9,19 +9,22 @@ var altitude  : double;
 var hAccuracy : double;
 var missionInfo : String; //BAD NAME
 var missionText = "";
-var hs_get : WWW;
-var hs_post: WWW;
+var server_get : WWW;
+var server_post: WWW;
 var currentMissionDetails : String;
 var userInfo : String;
+var leaderboardList : String[];
 
 //Add our URL
-var addMissionUrl : String;
-var getMissionUrl : String;
-var deleteMissionUrl : String;
-var getMissionDetailsUrl : String;
-var completeMissionUrl : String;
-var getUserInfoUrl : String;
-var currentPlayerId : int;
+private var addMissionUrl : String;
+private var getMissionUrl : String;
+private var deleteMissionUrl : String;
+private var getMissionDetailsUrl : String;
+private var completeMissionUrl : String;
+private var getUserInfoUrl : String;
+private var loginUrl : String;
+private var leaderboardUrl : String;
+private var createUserUrl : String;
 
 // Secret Key matching on server-side script
 private var secretKey = "mySecretKey"; 
@@ -29,7 +32,9 @@ private var secretKey = "mySecretKey";
 var testingData : String = "Landmark 1\nLandmark 2\nLandmark 3\nLandmark 4\nLandmark 5\nLandmark 6\nLandmark 7\nLandmark 8\nLandmark 9\nLandmark 10";
 
 
-function Start() {
+function Awake() {
+
+	userInfo = "";
 
 	addMissionUrl  = "http://www.tiagosomda.com/geoseeker/addLandmark.php?"; 
 	getMissionUrl = "http://www.tiagosomda.com/geoseeker/getLandmark.php";
@@ -37,8 +42,10 @@ function Start() {
 	getMissionDetailsUrl =   "http://www.tiagosomda.com/geoseeker/getMissionDetails.php?";
 	completeMissionUrl = "http://www.tiagosomda.com/geoseeker/completeMission.php?";
 	getUserInfoUrl = "http://www.tiagosomda.com/geoseeker/getUserInformation.php?";
+	loginUrl = "http://www.tiagosomda.com/geoseeker/userLogin.php?";
+	leaderboardUrl = "http://www.tiagosomda.com/geoseeker/getPlayersOrderedByPoints.php";
+	createUserUrl = "http://www.tiagosomda.com/geoseeker/userRegister.php?";
 	
-
     missionName = 'NNNN';
 	latitude  = Random.Range(-100,100);
 	longitude = Random.Range(-100,100);
@@ -61,27 +68,27 @@ function createMission(n : String, d : String, t : String, lat : double, longi :
     									//+ "&hash=" + hash;
  
     // Post the URL to the site and create a download object to get the result.
-    hs_post = WWW(addMissionUrl);
-    //hs_post = WWW("http://localhost/unity_test/addlandmark.php?name=NCSU&latitude=78.2&longitude=77.6&altitude=33.4&horizontalAccuracy=10.2");
-    yield hs_post; // Wait until the download is done
-    if(hs_post.error) {
-        print("There was an error posting the high score: " + hs_post.error);
+    server_post = WWW(addMissionUrl);
+    //server_post = WWW("http://localhost/unity_test/addlandmark.php?name=NCSU&latitude=78.2&longitude=77.6&altitude=33.4&horizontalAccuracy=10.2");
+    yield server_post; // Wait until the download is done
+    if(server_post.error) {
+        print("There was an error posting the high score: " + server_post.error);
         print(addMissionUrl);
     } else {
-        print("No error: " + hs_post.text);
+        print("No error: " + server_post.text);
     }
 }   
  
 // Get the scores from the MySQL DB to display in a GUIText.
 function updateMissions() {
-    hs_get = WWW(getMissionUrl);
-    yield hs_get;
+    server_get = WWW(getMissionUrl);
+    yield server_get;
  
-    if(hs_get.error) {
-    	print("There was an error getting the high score: " + hs_get.error);
+    if(server_get.error) {
+    	print("There was an error getting the missions: " + server_get.error + " ("+getMissionUrl+")");
     	missionText = testingData;
     } else {
-       missionText = hs_get.text;
+       missionText = server_get.text;
        //print(missionText); // this is a GUIText that will display the scores in game.
     }
 }
@@ -93,54 +100,116 @@ function getMissions() {
 function deleteMission(n : String) {
 	var deleteMissionUrl = deleteMissionUrl + "name="+ WWW.EscapeURL(n);
 	
-	hs_post = WWW(deleteMissionUrl);
-    //hs_post = WWW("http://localhost/unity_test/addlandmark.php?name=NCSU&latitude=78.2&longitude=77.6&altitude=33.4&horizontalAccuracy=10.2");
-    yield hs_post; // Wait until the download is done
-    if(hs_post.error) {
-        print("There was an error deleting the mission: " + hs_post.error);
+	server_post = WWW(deleteMissionUrl);
+    //server_post = WWW("http://localhost/unity_test/addlandmark.php?name=NCSU&latitude=78.2&longitude=77.6&altitude=33.4&horizontalAccuracy=10.2");
+    yield server_post; // Wait until the download is done
+    if(server_post.error) {
+        print("There was an error deleting the mission: " + server_post.error);
         print(addMissionUrl);
     } else {
-        print("No error: " + hs_post.text);
+        print("No error: " + server_post.text);
     }
 	
 }
 
 function getMissionDetails(id : String) {
 	var getMissionDetailsUrl = getMissionDetailsUrl + "id="+id;
-	hs_post = WWW(getMissionDetailsUrl);
+	server_post = WWW(getMissionDetailsUrl);
 	
-	yield hs_post;
+	yield server_post;
 	
-	if(hs_post.error) {
-        print("There was an error deleting the mission: " + hs_post.error);
-        print(hs_post.text);
+	if(server_post.error) {
+        print("There was an error deleting the mission: " + server_post.error);
+        print(server_post.text);
     } else {
-        currentMissionDetails = hs_post.text;
+        currentMissionDetails = server_post.text;
     }
 
 }
 
 function completeMission(userId : String, missionId : String){
 	var completeMissionUrl = completeMissionUrl + "userId="+userId+"&missionId="+missionId;
-	hs_post = WWW(completeMissionUrl);
+	server_post = WWW(completeMissionUrl);
 	
-	yield hs_post;
+	yield server_post;
 	
-	if(hs_post.error) {
-        print("There was an error compeleting the mission: " + hs_post.error);
+	if(server_post.error) {
+        print("There was an error compeleting the mission: " + server_post.error);
     } else {
-        print("No error: " + hs_post.text);
+        print("No error: " + server_post.text);
     }
 }
 
 function getUserInfo(){
-	var getUserInfoUrl = getUserInfoUrl + "id=111";
-	hs_post = WWW(getUserInfoUrl);
-	yield hs_post;
+	var getUserInfoUrl = getUserInfoUrl + "id="+PlayerPrefs.GetString("PlayerID");
+	server_post = WWW(getUserInfoUrl);
 	
-	if(hs_post.error) {
-        print("There was an error compeleting the mission: " + hs_post.error);
+	yield server_post;
+	
+	if(server_post.error) {
+        print("There was an error getting the user info: " + server_post.error);
     } else {
-        userInfo = hs_post.text;
+        userInfo = server_post.text;
+    }
+}
+
+function login(username : String, password : String) {
+	var loginUrl = loginUrl + "username="+ username +"&password="+password;
+	
+	server_post = WWW(loginUrl);
+	
+	yield server_post;
+	
+	if(server_post.error) {
+        print("There was an error logging: " + server_post.error);
+    } else {
+    	if(server_post.text.Contains("Error")){
+    		PlayerPrefs.SetString("PlayerID","Error");
+    	} else {
+    	    var temp = server_post.text.Split(','[0]);
+	        PlayerPrefs.SetString("PlayerID", temp[0]);
+    	    PlayerPrefs.SetString("PlayerName", temp[1]);
+    	    PlayerPrefs.SetString("PlayerPoints", temp[2]);
+    	    PlayerPrefs.SetString("PlayerCompleted", temp[3]);
+    	}
+    }
+}
+
+function createUser(username : String, password : String, email : String) {
+	var createUserUrl = createUserUrl + "username="+ username +"&password="+password+"&email="+email;
+	
+	server_post = WWW(createUserUrl);
+	
+	yield server_post;
+	
+	if(server_post.error) {
+        print("There was an error creating the user: " + server_post.error);
+    } else {
+    	var temp = server_post.text.Split(','[0]);
+	    PlayerPrefs.SetString("PlayerID", temp[0]);
+    	PlayerPrefs.SetString("PlayerName", temp[1]);
+    	PlayerPrefs.SetString("PlayerPoints", temp[2]);
+    	if(temp.Length == 4)
+    		PlayerPrefs.SetString("PlayerCompleted", temp[3]);
+    }
+}
+
+function getLeaderboardInfo() {
+
+	server_post = WWW(leaderboardUrl);
+	
+	yield server_post;
+	
+	if(server_post.error) {
+        print("There was an error getting the leaderboard: " + server_post.error);
+    } else {
+    	leaderboardList = server_post.text.Split('\n'[0]);
+    	var size = leaderboardList.Length;
+    	var i = 0;
+    	for (i = 0; i < size-1; i++) {
+    		var info = leaderboardList[i].Split(','[0]);
+    		PlayerPrefs.SetString("RankName"+i, info[0]);
+    		PlayerPrefs.SetString("RankPoints"+i, info[1]);
+    	}
     }
 }

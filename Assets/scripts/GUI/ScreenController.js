@@ -3,14 +3,18 @@ var skin : GUISkin;
 
 var server : ServerController;
 
-var Profile     : GameObject;
-var Mission     : GameObject;
-var Leaderboard : GameObject;
+var Profile     : ProfileScreen;
+var Mission     : LandmarksPage;
+var Leaderboard : LeaderBoardScreen;
 
 var numbRows  : float;
 var numbCols  : float;
 var rowHeight : float;
 var rowWidth  : float;
+
+static var toolbarInt : int = 0;
+static var toolbarStrings : String[] = ["Profile","Landmarks","Leaderboard"];
+static var previousToolbarInt = 0;
 
 var currentOrientation : DeviceOrientation;
 var btnFontSize : float;
@@ -21,12 +25,9 @@ var btnInactiveStyleName = "pButtonInactive";
 var topTabBtnsState = [btnActiveStyleName, btnInactiveStyleName, btnInactiveStyleName];
 
 function Start () {
+	server.getUserInfo(); 
 	updateRowAndColSize();
-	currentOrientation = Input.deviceOrientation;
-			
-	Profile.SetActive(false);
-	Mission.SetActive(true);
-	Leaderboard.SetActive(false);
+	currentOrientation = Input.deviceOrientation;		
 }
 
 function updateRowAndColSize() {
@@ -50,38 +51,31 @@ function OnGUI() {
 	GUI.skin.label.fontSize = btnFontSize;
 	GUI.skin.textField.fontSize = btnFontSize;
 	
-	//Draws TopTab
-	drawTopBar();
 	
-	//Draws the active Screen
-	if(Profile.activeSelf) {Profile.GetComponent(ProfileScreen).draw();}
-	else if(Mission.activeSelf) {Mission.GetComponent(MissionScreen).draw();}
-	else if(Leaderboard.activeSelf) {Leaderboard.GetComponent(LeaderBoardScreen).draw();}
+	if (PlayerPrefs.GetString("PlayerID").Equals("") || PlayerPrefs.GetString("PlayerID").Contains("Error") ) {
+		//Top toolbar
+		GUI.Box(Rect(0,0,Screen.width, Screen.height*0.1+2),"");
+		GUI.Button(Rect(1, 1, Screen.width-2, Screen.height*0.1),"GeoSeeker");
+		//GUI.Toolbar (Rect(1, 1, Screen.width-2, Screen.height*0.1), toolbarInt, "Login");
+		
+		Profile.draw();
+	} else {
+		//Top toolbar
+		GUI.Box(Rect(0,0,Screen.width, Screen.height*0.1+2),"");
+		toolbarInt = GUI.Toolbar (Rect(1, 1, Screen.width-2, Screen.height*0.1), toolbarInt, toolbarStrings);
+	
+		//Draws the active Screen
+		if(toolbarInt == 0) {Profile.draw(); switchBackToViewAllLandmarks();}
+		else if(toolbarInt == 1) {Mission.draw();}
+		else if(toolbarInt == 2) {Leaderboard.draw(); switchBackToViewAllLandmarks();}
+	}
+	
+
 }
 
-function drawTopBar() {		
-	if(GUI.Button(new Rect(0,0, rowWidth,rowHeight),"Profile")){ switchScreen(Profile);}
-	if(GUI.Button(new Rect(rowWidth,0,rowWidth,rowHeight),"Mission")){switchScreen(Mission);}
-	if(GUI.Button(new Rect(rowWidth*2,0,rowWidth,rowHeight),"Leaderboard")){switchScreen(Leaderboard);}
-}
-
-function switchScreen(clicked : GameObject) {
-	switch(clicked) {
-		case Profile:
-			server.getUserInfo(); 
-			Profile.SetActive(true); 	 topTabBtnsState[0] = btnActiveStyleName; 
-			Mission.SetActive(false); 	 topTabBtnsState[1] = btnInactiveStyleName;
-			Leaderboard.SetActive(false);topTabBtnsState[2] = btnInactiveStyleName;
-			break;
-		case Mission:
-			Profile.SetActive(false); 	 topTabBtnsState[0] = btnInactiveStyleName;
-			Mission.SetActive(true);	 topTabBtnsState[1] = btnActiveStyleName; 
-			Leaderboard.SetActive(false);topTabBtnsState[2] = btnInactiveStyleName;
-			break;
-		case Leaderboard: 
-			Profile.SetActive(false);	topTabBtnsState[0] = btnInactiveStyleName;
-			Mission.SetActive(false);	topTabBtnsState[1] = btnInactiveStyleName;
-			Leaderboard.SetActive(true);topTabBtnsState[2] = btnActiveStyleName; 
-			break;
+function switchBackToViewAllLandmarks() {
+	if(Mission.currentPage != lndmrksPage.viewLandmarks) {
+		Mission.currentPage = lndmrksPage.viewLandmarks;
 	}
 }
+
