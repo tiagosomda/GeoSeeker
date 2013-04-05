@@ -1,29 +1,19 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2008
 
-Project("{2FB07F7E-FCDC-70FB-6A03-2C839E2C5A2E}") = "GeoSeeker", "Assembly-CSharp-vs.csproj", "{87B7692D-3C0E-6662-9FA1-CC7553D17487}"
-EndProject
-Project("{2FB07F7E-FCDC-70FB-6A03-2C839E2C5A2E}") = "GeoSeeker", "Assembly-CSharp-Editor-vs.csproj", "{7DE0B8E0-DD48-D18B-C321-2B9136EE795B}"
-EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{87B7692D-3C0E-6662-9FA1-CC7553D17487}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{87B7692D-3C0E-6662-9FA1-CC7553D17487}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{87B7692D-3C0E-6662-9FA1-CC7553D17487}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{87B7692D-3C0E-6662-9FA1-CC7553D17487}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7DE0B8E0-DD48-D18B-C321-2B9136EE795B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7DE0B8E0-DD48-D18B-C321-2B9136EE795B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7DE0B8E0-DD48-D18B-C321-2B9136EE795B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7DE0B8E0-DD48-D18B-C321-2B9136EE795B}.Release|Any CPU.Build.0 = Release|Any CPU
+
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-																																																																				GlobalSection(MonoDevelopProperties) = preSolution
+																																																																							GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1

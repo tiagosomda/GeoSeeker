@@ -89,7 +89,6 @@ function updateMissions() {
     	missionText = testingData;
     } else {
        missionText = server_get.text;
-       //print(missionText); // this is a GUIText that will display the scores in game.
     }
 }
 
@@ -136,7 +135,7 @@ function completeMission(userId : String, missionId : String){
 	if(server_post.error) {
         print("There was an error compeleting the mission: " + server_post.error);
     } else {
-        print("No error: " + server_post.text);
+       getUserInfo();
     }
 }
 
@@ -149,7 +148,11 @@ function getUserInfo(){
 	if(server_post.error) {
         print("There was an error getting the user info: " + server_post.error);
     } else {
-        userInfo = server_post.text;
+  		var temp = server_post.text.Split(','[0]);
+	    PlayerPrefs.SetString("PlayerID", temp[0]);
+    	PlayerPrefs.SetString("PlayerName", temp[1]);
+    	PlayerPrefs.SetString("PlayerPoints", temp[2]);
+    	PlayerPrefs.SetString("PlayerCompleted", temp[3]);
     }
 }
 

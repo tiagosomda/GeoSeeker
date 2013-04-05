@@ -33,23 +33,26 @@ function showLeaderboard() {
 	
 	GUI.Box(new Rect(0,screen.rowHeight+1, Screen.width, screen.rowHeight*9),"");
 	
-	GUI.Box(Rect(0,screen.rowHeight+2,Screen.width, screen.rowHeight/2),"");
-	if (GUI.Button(Rect(1,screen.rowHeight+2,Screen.width-2, screen.rowHeight/2-1), "Update Leaderboard")){server.getLeaderboardInfo();}
+	
+	
 	
 	numRows = server.leaderboardList.Length;
 	if (numRows != 0) {
 		var i = 0;
-		scrollPosition = GUI.BeginScrollView(Rect(0, Screen.height*0.15+2, Screen.width, Screen.height*0.9), scrollPosition, Rect(0, 0, Screen.width, (Screen.height*0.1)*(numRows-1)));
+		scrollPosition = GUI.BeginScrollView(Rect(0, screen.rowHeight, Screen.width, Screen.height*0.9), scrollPosition, Rect(0, 0, Screen.width, (Screen.height*0.1)*(numRows-1)));
 			for (i = 0; i < server.leaderboardList.Length-1; i++) {
 				GUI.Box(Rect(0,screen.rowHeight*i, Screen.width,screen.rowHeight),"");
 				GUI.Label(Rect(Screen.width*0.1 , screen.rowHeight*i+1, screen.rowWidth, screen.rowHeight-2),(i+1).ToString());	
-				GUI.Label(Rect(Screen.width*0.1 + screen.rowWidth,screen.rowHeight*i+1, screen.rowWidth, screen.rowHeight-2),PlayerPrefs.GetString("RankName"+i));	
-				GUI.Label(Rect(Screen.width*0.1 + screen.rowWidth*2,screen.rowHeight*i+1,screen.rowWidth, screen.rowHeight-2), PlayerPrefs.GetString("RankPoints"+i));
+				GUI.Label(Rect(screen.rowWidth,screen.rowHeight*i+1, screen.rowWidth, screen.rowHeight-2),PlayerPrefs.GetString("RankName"+i));	
+				GUI.Label(Rect(screen.rowWidth*2,screen.rowHeight*i+1,screen.rowWidth, screen.rowHeight-2), PlayerPrefs.GetString("RankPoints"+i));
 			}
 		GUI.EndScrollView ();
 	} else {
 		GUI.Button(new Rect(0,screen.rowHeight*2 - screen.rowHeight/2, Screen.width, screen.rowHeight), "No Missions");	
-	}	
+	}
+	
+	GUI.Box(Rect(0,Screen.height*0.9, Screen.width, screen.rowHeight),"");
+	if (GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Update Leaderboard")){server.getLeaderboardInfo();}
 }
 
 function Update() {

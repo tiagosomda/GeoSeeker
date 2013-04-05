@@ -52,19 +52,21 @@ function draw() {
 }
 
 function viewLandmark(id : String) {
+	//server.getMissionDetails(id);
 	checkMissionLocation();
 	GUI.Box(Rect(0,screen.rowHeight+2,Screen.width, Screen.height),"");
 	var recordData = server.currentMissionDetails.Split(','[0]);
+		
 	GUI.Box(Rect(0,screen.rowHeight+2,Screen.width, screen.rowHeight/2),"");
 	if (GUI.Button(Rect(1,screen.rowHeight+2,Screen.width-2, screen.rowHeight/2-1), "View all Landmarks")){currentPage = lndmrksPage.viewLandmarks;}
 	
 	//Draw Google Maps and Complete Mission/Update Location Button	
 	if (lastDistance < 0.01) {
-		GUI.Box(Rect(Screen.width*.1,screen.rowHeight*2, Screen.width*0.8, Screen.height*0.25),"Google Maps");
+		GUI.Box(Rect(Screen.width*.1-1,screen.rowHeight*2-1, Screen.width*0.8+2, Screen.height*0.25+2),"Google Maps","landmarkBox");
 		GUI.Label(Rect(Screen.width*.4,screen.rowHeight*3, Screen.width,screen.rowHeight), "In Range!");
 		GUI.Box(Rect(0,Screen.height*0.9, Screen.width, screen.rowHeight),"");
 		
-		if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Complete Mission")){server.completeMission('111', recordData[0]);}
+		if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Complete Mission")){server.completeMission('111', recordData[0]); screen.toolbarInt = 0;}
 	} else {	
 		var d;
 		var temp : int;
@@ -76,7 +78,7 @@ function viewLandmark(id : String) {
 			d = temp + " meters away";
 		}
 		
-		GUI.Box(Rect(Screen.width*.1,screen.rowHeight*2, Screen.width*0.8, Screen.height*0.25),"Google Maps");
+		GUI.Box(Rect(Screen.width*.1-1,screen.rowHeight*2-1, Screen.width*0.8+2, Screen.height*0.25+2),"Google Maps","landmarkBox");
 		GUI.Label(Rect(Screen.width*.4,screen.rowHeight*3, Screen.width,screen.rowHeight), d.ToString());
 		GUI.Box(Rect(0,Screen.height*0.9, Screen.width, screen.rowHeight),"");
 		
@@ -118,12 +120,13 @@ function showLandmarks() {
 		scrollPosition = GUI.BeginScrollView(Rect(0, Screen.height*0.1+2, Screen.width, Screen.height*0.82), scrollPosition, Rect(0, 0, Screen.width, (Screen.height*0.1)*(numRows-1)));
 			for (i = 0; i < numRows -1; i++) {
 				var recordData = records[i].Split(','[0]);
-				GUI.Box(Rect(0,screen.rowHeight*i, Screen.width,screen.rowHeight),"");	
-			   	if(GUI.Button(Rect(1,screen.rowHeight*i+1, Screen.width-2, screen.rowHeight-2), "")){
+				GUI.Box(Rect(0,screen.rowHeight*i, Screen.width,screen.rowHeight),"","landmarkBox");	
+			   	if(GUI.Button(Rect(1,screen.rowHeight*i+1, Screen.width-2, screen.rowHeight-2), "", "landmarkButton")){
 			   		viewingLandmarkId=recordData[1]; 	
 			   		currentPage = lndmrksPage.viewLandmark;
 			   		server.getMissionDetails(recordData[1]);
 			   		yield location.getLocation();
+			   		checkMissionLocation();
 			   		viewLandmark(recordData[1]);
 			   	}
 			   	GUI.Label(Rect(Screen.width*0.1, screen.rowHeight*i + screen.rowHeight*0.2, Screen.width,screen.rowHeight), recordData[0]);
@@ -214,7 +217,7 @@ function TouchToRowIndex(touchPos : Vector2) : int //this checks which row was t
 
 function checkMissionLocation() {
 	var recordData = server.currentMissionDetails.Split(','[0]);
-	if (recordData.Length == 6){
+	if (recordData.Length == 7){
 		lastDistance = getDistance(Input.location.lastData.latitude,Input.location.lastData.longitude,
 					       		   float.Parse(recordData[2]), float.Parse(recordData[3]));
 	}
