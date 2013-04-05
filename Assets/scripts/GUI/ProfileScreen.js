@@ -29,9 +29,10 @@ function draw () {
 
 function showLogin() {
 	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*2, Screen.width,screen.rowHeight),"Username: ");
-	username = GUI.TextField(Rect(Screen.width*.1,screen.rowHeight*2.5, Screen.width*.8,screen.rowHeight), username);
-	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*4, Screen.width,screen.rowHeight),"Password: ");
-	password = GUI.TextField(Rect(Screen.width*.1,screen.rowHeight*4.5, Screen.width*.8,screen.rowHeight), password);
+	username = GUI.TextField(Rect(Screen.width*.1,screen.rowHeight*2.5, Screen.width*.8,screen.rowHeight*0.7), username);
+	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*3.5, Screen.width,screen.rowHeight),"Password: ");
+	//passwordToEdit = GUI.PasswordField (Rect (140, 312-36, 130, 20), passwordToEdit, "*"[0], 25);
+	password = GUI.PasswordField(Rect(Screen.width*.1,screen.rowHeight*4, Screen.width*.8,screen.rowHeight*0.7), password, "*"[0]);
 		
 	GUI.Box(Rect(0,Screen.height*.9, Screen.width*.5,screen.rowHeight),"");
 	if(GUI.Button(Rect(0+1,Screen.height*.9+1, Screen.width*.5-2,screen.rowHeight-2),"Login")){server.login(username,password);}
@@ -54,7 +55,7 @@ function showRegistration() {
 	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*2, Screen.width,screen.rowHeight),"Username: ");
 	username = GUI.TextField(Rect(Screen.width*.1,screen.rowHeight*2.5, Screen.width*.8,screen.rowHeight), username);
 	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*4, Screen.width,screen.rowHeight),"Password: ");
-	password = GUI.TextField(Rect(Screen.width*.1,screen.rowHeight*4.5, Screen.width*.8,screen.rowHeight), password);	
+	password = GUI.TextField(Rect(Screen.width*.1,screen.rowHeight*4.5, Screen.width*.8,screen.rowHeight), password, "*"[0]);	
 	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*6, Screen.width,screen.rowHeight),"Email: ");
 	email = GUI.TextField(Rect(Screen.width*.1,screen.rowHeight*6.5, Screen.width*.8,screen.rowHeight), email);
 	

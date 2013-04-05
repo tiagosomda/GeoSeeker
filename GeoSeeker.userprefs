@@ -1,11 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\GUI\LandmarksPage.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\GUI\ProfileScreen.js">
     <Files>
-      <File FileName="Assets\scripts\GUI\LandmarksPage.js" Line="81" Column="127" />
-      <File FileName="Assets\scripts\ServerController.js" Line="91" Column="38" />
-      <File FileName="Assets\scripts\GUI\ScreenController.js" Line="1" Column="1" />
-      <File FileName="Assets\scripts\GUI\LeaderBoardScreen.js" Line="47" Column="20" />
+      <File FileName="Assets\scripts\GUI\ProfileScreen.js" Line="35" Column="70" />
+      <File FileName="Assets\scripts\GUI\LandmarksPage.js" Line="1" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
