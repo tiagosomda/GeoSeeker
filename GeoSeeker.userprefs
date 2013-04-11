@@ -1,8 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\GoogleMaps\Scripts\GoogleMap.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\GoogleMaps\Scripts\RectGoogleMap.cs">
     <Files>
-      <File FileName="Assets\GoogleMaps\Scripts\GoogleMap.cs" Line="21" Column="31" />
+      <File FileName="Assets\GoogleMaps\Scripts\GoogleMap.cs" Line="86" Column="6" />
+      <File FileName="Assets\GoogleMaps\Scripts\RectGoogleMap.cs" Line="91" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

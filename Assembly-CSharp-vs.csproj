@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\GoogleMaps\Scripts\GoogleMap.cs" />
+     <Compile Include="Assets\GoogleMaps\Scripts\RectGoogleMap.cs" />
      <Compile Include="Assets\UniWeb\Examples\FetchImage.cs" />
      <Compile Include="Assets\UniWeb\Examples\FetchStream.cs" />
      <Compile Include="Assets\UniWeb\Examples\KeepAlive.cs" />

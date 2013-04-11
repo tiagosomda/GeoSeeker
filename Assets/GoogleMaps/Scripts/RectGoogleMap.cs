@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class GoogleMap : MonoBehaviour
-{
+public class RectGoogleMap : MonoBehaviour {
+
 	public enum MapType
 	{
 		RoadMap,
@@ -82,58 +82,10 @@ public class GoogleMap : MonoBehaviour
 		if (req.exception == null) {
 			var tex = new Texture2D (size, size);
 			tex.LoadImage (req.response.Bytes);
-			renderer.material.mainTexture = tex;
-			//guiTexture.texture = tex;
+			//renderer.material.mainTexture = tex;
+			guiTexture.texture = tex;
 		}
 	}
 	
 	
-}
-
-public enum GoogleMapColor
-{
-	black,
-	brown,
-	green,
-	purple,
-	yellow,
-	blue,
-	gray,
-	orange,
-	red,
-	white
-}
-
-[System.Serializable]
-public class GoogleMapLocation
-{
-	public string address;
-	public float latitude;
-	public float longitude;
-}
-
-[System.Serializable]
-public class GoogleMapMarker
-{
-	public enum GoogleMapMarkerSize
-	{
-		Tiny,
-		Small,
-		Mid
-	}
-	public GoogleMapMarkerSize size;
-	public GoogleMapColor color;
-	public string label;
-	public GoogleMapLocation[] locations;
-	
-}
-
-[System.Serializable]
-public class GoogleMapPath
-{
-	public int weight = 5;
-	public GoogleMapColor color;
-	public bool fill = false;
-	public GoogleMapColor fillColor;
-	public GoogleMapLocation[] locations;	
 }
