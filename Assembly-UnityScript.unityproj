@@ -54,7 +54,12 @@
      <Compile Include="Assets\scripts\Md5.js" />
      <Compile Include="Assets\scripts\ServerController.js" />
      <Compile Include="Assets\scripts\UserInterface.js" />
+     <None Include="Assets\UniWeb\README.txt" />
+     <None Include="Assets\GoogleMaps\README.txt" />
      <None Include="Assets\GUISkin\ReadMe.txt" />
+ <Reference Include="Ionic.Zlib">
+ <HintPath>Assets\UniWeb\DLL\Ionic.Zlib.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
