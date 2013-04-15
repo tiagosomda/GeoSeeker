@@ -7,13 +7,14 @@ var latitude  : double;
 var longitude : double;
 var altitude  : double;
 var hAccuracy : double;
-var missionInfo : String; //BAD NAME
+var missionInfo : String;
 var missionText = "";
 var server_get : WWW;
 var server_post: WWW;
 var currentMissionDetails : String;
 var userInfo : String;
 var leaderboardList : String[];
+var completedMissions : String;
 
 //Add our URL
 private var addMissionUrl : String;
@@ -25,6 +26,7 @@ private var getUserInfoUrl : String;
 private var loginUrl : String;
 private var leaderboardUrl : String;
 private var createUserUrl : String;
+private var completedMissionsUrl : String;
 
 // Secret Key matching on server-side script
 private var secretKey = "mySecretKey"; 
@@ -45,6 +47,7 @@ function Awake() {
 	loginUrl = "http://www.tiagosomda.com/geoseeker/userLogin.php?";
 	leaderboardUrl = "http://www.tiagosomda.com/geoseeker/getPlayersOrderedByPoints.php";
 	createUserUrl = "http://www.tiagosomda.com/geoseeker/userRegister.php?";
+	completedMissionsUrl = "http://www.tiagosomda.com/geoseeker/getUserCompletedMissions.php?";
 	
     missionName = 'NNNN';
 	latitude  = Random.Range(-100,100);
@@ -79,7 +82,10 @@ function createMission(n : String, d : String, t : String, lat : double, longi :
     }
 }   
  
-// Get the scores from the MySQL DB to display in a GUIText.
+function getMissions() {
+	return missionText;
+}
+
 function updateMissions() {
     server_get = WWW(getMissionUrl);
     yield server_get;
@@ -92,9 +98,23 @@ function updateMissions() {
     }
 }
 
-function getMissions() {
-	return missionText;
+function getCompletedMissions() {
+	var completedMissionsUrl = completedMissionsUrl+"id="+PlayerPrefs.GetString("PlayerID");
+	var server_get = WWW(completedMissionsUrl);
+	yield server_get;
+	
+	if(server_get.error) {
+    	print("There was an error getting the missions: " + server_get.error + " ("+completedMissionsUrl+")");
+    } else {
+       var temp = server_get.text.Split(','[0]);
+       var size = temp.Length;
+       for(var i = 0; i < size; i++) {
+       		PlayerPrefs.SetString(PlayerPrefs.GetString("PlayerID")+"Mission"+temp[i],"completed");
+       }
+    }
 }
+
+
 
 function deleteMission(n : String) {
 	var deleteMissionUrl = deleteMissionUrl + "name="+ WWW.EscapeURL(n);
@@ -127,6 +147,9 @@ function getMissionDetails(id : String) {
 }
 
 function completeMission(userId : String, missionId : String){
+	//Sets local list of missions to completed
+	PlayerPrefs.SetString("Mission"+missionId,"completed");
+	//Creates URL to update list of completed missions by a user on the server
 	var completeMissionUrl = completeMissionUrl + "userId="+userId+"&missionId="+missionId;
 	server_post = WWW(completeMissionUrl);
 	
@@ -137,6 +160,10 @@ function completeMission(userId : String, missionId : String){
     } else {
        getUserInfo();
     }
+  
+ 	//Updates local list of missions to completed - might not be necessary.
+    getCompletedMissions();
+    
 }
 
 function getUserInfo(){

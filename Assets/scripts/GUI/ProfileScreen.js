@@ -45,7 +45,10 @@ function showProfile() {
 	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*2, Screen.width,screen.rowHeight), PlayerPrefs.GetString("PlayerName"));
 	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*3, Screen.width,screen.rowHeight), "ID: " + PlayerPrefs.GetString("PlayerID"));	
 	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*4, Screen.width,screen.rowHeight), "Points: " + PlayerPrefs.GetString("PlayerPoints"));
-	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*5, Screen.width,screen.rowHeight), "Landmarks Visited: " + PlayerPrefs.GetString("PlayerCompleted"));
+	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*5, Screen.width,screen.rowHeight), "Rank: " + "None");
+	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*6, Screen.width,screen.rowHeight), "Landmarks: ");
+	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*7, Screen.width,screen.rowHeight), "Visited: " + PlayerPrefs.GetString("PlayerCompleted"));
+	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*8, Screen.width,screen.rowHeight), "Dominated: " + "None");
 		
 	GUI.Box(Rect(0,Screen.height*.9, Screen.width,screen.rowHeight),"");
 	if(GUI.Button(Rect(0+1,Screen.height*.9+1, Screen.width-2,screen.rowHeight-2),"Log out")){logout();}

@@ -25,7 +25,9 @@ var btnInactiveStyleName = "pButtonInactive";
 var topTabBtnsState = [btnActiveStyleName, btnInactiveStyleName, btnInactiveStyleName];
 
 function Start () {
-	server.getUserInfo(); 
+	server.getUserInfo();
+	server.getCompletedMissions();
+	
 	updateRowAndColSize();
 	currentOrientation = Input.deviceOrientation;		
 }

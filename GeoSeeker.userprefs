@@ -1,9 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\GoogleMaps\Scripts\RectGoogleMap.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\GUI\ProfileScreen.js">
     <Files>
-      <File FileName="Assets\GoogleMaps\Scripts\GoogleMap.cs" Line="86" Column="6" />
-      <File FileName="Assets\GoogleMaps\Scripts\RectGoogleMap.cs" Line="91" Column="2" />
+      <File FileName="Assets\scripts\ServerController.js" Line="144" Column="1" />
+      <File FileName="Assets\scripts\GUI\ScreenController.js" Line="71" Column="36" />
+      <File FileName="Assets\scripts\GUI\ProfileScreen.js" Line="50" Column="140" />
+      <File FileName="Assets\scripts\GUI\LandmarksPage.js" Line="68" Column="101" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

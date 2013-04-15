@@ -25,10 +25,10 @@ function Start () {
 	newMissionTags = "Enter tags";
 }
 
-function Update () {}
 function refreshMissionList() {
 	yield server.updateMissions();
 }
+
 function draw () {
 	GUI.Box(new Rect(0,screen.rowHeight*2 - screen.rowHeight/2, Screen.width, screen.rowHeight*9),"");
 	
