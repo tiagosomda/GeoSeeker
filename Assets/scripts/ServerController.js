@@ -8,10 +8,10 @@ var longitude : double;
 var altitude  : double;
 var hAccuracy : double;
 var missionInfo : String;
-var missionText = "";
+var missionText : String[];
 var server_get : WWW;
 var server_post: WWW;
-var currentMissionDetails : String;
+var currentMissionDetails : String[];
 var userInfo : String;
 var leaderboardList : String[];
 var completedMissions : String;
@@ -27,6 +27,7 @@ private var loginUrl : String;
 private var leaderboardUrl : String;
 private var createUserUrl : String;
 private var completedMissionsUrl : String;
+private var dominateLandmarkUrl : String;
 
 // Secret Key matching on server-side script
 private var secretKey = "mySecretKey"; 
@@ -48,6 +49,7 @@ function Awake() {
 	leaderboardUrl = "http://www.tiagosomda.com/geoseeker/getPlayersOrderedByPoints.php";
 	createUserUrl = "http://www.tiagosomda.com/geoseeker/userRegister.php?";
 	completedMissionsUrl = "http://www.tiagosomda.com/geoseeker/getUserCompletedMissions.php?";
+	dominateLandmarkUrl = "http://www.tiagosomda.com/geoseeker/dominateLandmark.php?";
 	
     missionName = 'NNNN';
 	latitude  = Random.Range(-100,100);
@@ -59,8 +61,8 @@ function Awake() {
   
 function createMission(n : String, d : String, t : String, lat : double, longi : double, alti : double, hAccur : double) {
     //This connects to a server side php script that will add the name and score to a MySQL DB.
-    // Supply it with a string representing the players name and the players score.  
-    var hash = Md5.Md5Sum(missionName + secretKey);
+    //Supply it with a string representing the players name and the players score.  
+    //var hash = Md5.Md5Sum(missionName + secretKey);
  
     var addMissionUrl = addMissionUrl   + "name="      	+ WWW.EscapeURL(n) 
     									+ "&latitude=" 	+ lat 
@@ -78,7 +80,7 @@ function createMission(n : String, d : String, t : String, lat : double, longi :
         print("There was an error posting the high score: " + server_post.error);
         print(addMissionUrl);
     } else {
-        print("No error: " + server_post.text);
+        print("Added Landmark " + server_post.text);
     }
 }   
  
@@ -92,9 +94,9 @@ function updateMissions() {
  
     if(server_get.error) {
     	print("There was an error getting the missions: " + server_get.error + " ("+getMissionUrl+")");
-    	missionText = testingData;
+    	missionText = testingData.Split('\n'[0]);
     } else {
-       missionText = server_get.text;
+       missionText = server_get.text.Split('\n'[0]);
     }
 }
 
@@ -114,7 +116,20 @@ function getCompletedMissions() {
     }
 }
 
+function dominateLandmark(missionId : String) {
+	var dominateLandmarkUrl = dominateLandmarkUrl + "userId="+PlayerPrefs.GetString("PlayerID") + "&landmarkId="+missionId;
+	var url_request = WWW(dominateLandmarkUrl);
 
+	yield url_request;
+	
+	if(url_request.error) {
+        print("There was an error deleting the mission: " + url_request.error);
+        print(dominateLandmarkUrl);
+    } else {
+//        print("No error: " + url_request.text);
+        //print(dominateLandmarkUrl);
+    }
+}
 
 function deleteMission(n : String) {
 	var deleteMissionUrl = deleteMissionUrl + "name="+ WWW.EscapeURL(n);
@@ -141,7 +156,7 @@ function getMissionDetails(id : String) {
         print("There was an error deleting the mission: " + server_post.error);
         print(server_post.text);
     } else {
-        currentMissionDetails = server_post.text;
+        currentMissionDetails = server_post.text.Split(','[0]);
     }
 
 }

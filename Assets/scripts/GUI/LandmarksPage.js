@@ -1,7 +1,12 @@
 #pragma strict
+
 var screen : ScreenController;
 var server : ServerController;
 var location : LocationController;
+var exitScreen : GameObject;
+var googleMap : LandmarkGoogleMap;
+var completedSound : AudioClip;
+var dominateSound : AudioClip;
 
 enum lndmrksPage { viewLandmarks, createLandmark, viewLandmark}
 var currentPage : lndmrksPage;
@@ -52,36 +57,60 @@ function draw() {
 }
 
 function viewLandmark(id : String) {
-	//server.getMissionDetails(id);
 	checkMissionLocation();
 	
-	var recordData = server.currentMissionDetails.Split(','[0]);
-		
-	if(PlayerPrefs.GetString(PlayerPrefs.GetString("PlayerID")+"Mission"+recordData[0]) == "completed") {
+	//If mission was completed	
+	if(PlayerPrefs.GetString(PlayerPrefs.GetString("PlayerID")+"Mission"+server.currentMissionDetails[0]) == "completed") {
 		//Draw Box Green Box for completed Mission
-		//GUI.Box(Rect(0,screen.rowHeight+2,Screen.width, Screen.height),"");
-		GUI.Box(Rect(0,screen.rowHeight+2,Screen.width, Screen.height),"","completedMissionBox");
+		GUI.Box(Rect(0,screen.rowHeight,Screen.width, Screen.height),"","completedMissionBox");
 		GUI.Box(Rect(Screen.width*.1-1,screen.rowHeight*2-1, Screen.width*0.8+2, Screen.height*0.25+2),"Google Maps","landmarkBox");
 		GUI.Label(Rect(Screen.width*.4,screen.rowHeight*3, Screen.width,screen.rowHeight), "In Range!");
 		GUI.Box(Rect(0,Screen.height*0.9, Screen.width, screen.rowHeight),"");
-	
-		if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Dominate Landmark")) { 
-			screen.toolbarInt = 0;
+			
+		if (server.currentMissionDetails.Length > 7) { // Mission Info was parsed
+			//There is an onwer
+			if(server.currentMissionDetails[7] != "NONE\n") {
+				//print(server.currentMissionDetails[8]);
+				//You are the owner
+				if (server.currentMissionDetails[7] == PlayerPrefs.GetString("PlayerID")) {
+					GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "YOU ARE THE DOMINATOR");
+				//You aren't the owner and you have more points
+				} else	if (int.Parse(server.currentMissionDetails[9]) < int.Parse(PlayerPrefs.GetString("PlayerPoints"))){
+					if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Dominate Landmark")) {
+						server.dominateLandmark(server.currentMissionDetails[0]);
+						audio.PlayOneShot(dominateSound);
+						currentPage = lndmrksPage.viewLandmarks;
+					}
+				//You aren't the owner and you don't have enough points to dominate the landmark
+				} else {
+					if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Can't Dominate")) { 
+						//screen.toolbarInt = 0;
+					}
+				}
+			//There is no owner
+			} else {
+				if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Dominate Landmark")) {
+					audio.PlayOneShot(dominateSound);
+					server.dominateLandmark(server.currentMissionDetails[0]);
+					currentPage = lndmrksPage.viewLandmarks;
+				}
+			}	
 		}
+	//If mission was not completed
 	} else {
 		GUI.Box(Rect(0,screen.rowHeight+2,Screen.width, Screen.height),"");
 		
-		//Draw Google Maps and Complete Mission/Update Location Button	
-		if (lastDistance < 0.01) {
+		if (lastDistance < 0.01) { //Within Range to complete
 			GUI.Box(Rect(Screen.width*.1-1,screen.rowHeight*2-1, Screen.width*0.8+2, Screen.height*0.25+2),"Google Maps","landmarkBox");
 			GUI.Label(Rect(Screen.width*.4,screen.rowHeight*3, Screen.width,screen.rowHeight), "In Range!");
 			GUI.Box(Rect(0,Screen.height*0.9, Screen.width, screen.rowHeight),"");
 	
 			if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Complete Mission")) { 
-				server.completeMission(PlayerPrefs.GetString("PlayerID"), recordData[0]); 
-				screen.toolbarInt = 0;
+				server.completeMission(PlayerPrefs.GetString("PlayerID"), server.currentMissionDetails[0]);
+				audio.PlayOneShot(completedSound);
+				currentPage = lndmrksPage.viewLandmarks;
 			}
-		} else {	
+		} else { // Not within Range to complete
 			var d;
 			var temp : int;
 			if (lastDistance > 1) {
@@ -100,14 +129,14 @@ function viewLandmark(id : String) {
 		}	
 	}
 	
-	//Button to view all landmarks
-	GUI.Box(Rect(0,screen.rowHeight+2,Screen.width, screen.rowHeight/2),"");
-	if (GUI.Button(Rect(1,screen.rowHeight+2,Screen.width-2, screen.rowHeight/2-1), "View all Landmarks")){currentPage = lndmrksPage.viewLandmarks;}	
+	//Back Button to view all landmarks
+	GUI.Box(Rect(0,screen.rowHeight,Screen.width, screen.rowHeight/2),"");
+	if (GUI.Button(Rect(1,screen.rowHeight+1,Screen.width-2, screen.rowHeight/2-1), "Back")){currentPage = lndmrksPage.viewLandmarks;}	
 	
 	//Only display description if recordData was parsed
-	if (recordData.Length == 7){
+	if (server.currentMissionDetails.Length > 7){
 		GUI.Label(Rect(Screen.width*.1,screen.rowHeight*4.5, Screen.width*0.8, screen.rowHeight),"Description: ");
-		GUI.Label(Rect(Screen.width*.1+5,screen.rowHeight*5+5, Screen.width*0.8-10, Screen.height*0.35-10),recordData[6]);
+		GUI.Label(Rect(Screen.width*.1+5,screen.rowHeight*5+5, Screen.width*0.8-10, Screen.height*0.35-10),server.currentMissionDetails[6]);
 	}
 
 }
@@ -115,9 +144,9 @@ function viewLandmark(id : String) {
 function createLandmark() {
 	GUI.Box(Rect(0,screen.rowHeight+2,Screen.width, Screen.height),"");
 	GUI.Box(Rect(0,screen.rowHeight+2,Screen.width, screen.rowHeight/2),"");
-	if (GUI.Button(Rect(1,screen.rowHeight+2,Screen.width-2, screen.rowHeight/2-1), "View all Landmarks")){currentPage = lndmrksPage.viewLandmarks;}
+	if (GUI.Button(Rect(1,screen.rowHeight+2,Screen.width-2, screen.rowHeight/2-1), "Back")){currentPage = lndmrksPage.viewLandmarks;}
 
-	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*2, Screen.width, screen.rowHeight), "Mission Name: ");
+	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*2, Screen.width, screen.rowHeight), "Landmark Name: ");
 	newMissionName = GUI.TextField(Rect(Screen.width*.1,screen.rowHeight*2.5, Screen.width*.8, screen.rowHeight*0.7), newMissionName,12);
 	
 	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*3.2, Screen.width, screen.rowHeight), "Description: ");
@@ -132,27 +161,28 @@ function createLandmark() {
 function showLandmarks() {
 	GUI.Box(new Rect(0,screen.rowHeight*1.5 - screen.rowHeight/2, Screen.width, screen.rowHeight*9),"");
 	if (server.missionText != "") {
-		var i = 0;
-		var records = server.missionText.Split('\n'[0]);
-		numRows = records.Length;
+		numRows = server.missionText.Length;
 		scrollPosition = GUI.BeginScrollView(Rect(0, Screen.height*0.1+2, Screen.width, Screen.height*0.82), scrollPosition, Rect(0, 0, Screen.width, (Screen.height*0.1)*(numRows-1)));
-			for (i = 0; i < numRows -1; i++) {
-				var recordData = records[i].Split(','[0]);
-				GUI.Box(Rect(1,screen.rowHeight*i, Screen.width-2,screen.rowHeight),"","landmarkBox");
-				var isCompleted = "notVisitedLandmark";
-				if(PlayerPrefs.GetString(PlayerPrefs.GetString("PlayerID")+"Mission"+recordData[1]) == "completed") {
-					isCompleted = "visitedLandmark";
-				}
-				
-			   	if(GUI.Button(Rect(1,screen.rowHeight*i+1, Screen.width-2, screen.rowHeight-2), "", isCompleted)){
-			   		viewingLandmarkId=recordData[1]; 	
-			   		currentPage = lndmrksPage.viewLandmark;
-			   		server.getMissionDetails(recordData[1]);
-			   		yield location.getLocation();
-			   		checkMissionLocation();
-			   		viewLandmark(recordData[1]);
-			   	}
-			   	GUI.Label(Rect(Screen.width*0.1, screen.rowHeight*i + screen.rowHeight*0.2, Screen.width,screen.rowHeight), recordData[0]);			   	
+			for (var i = 0; i < numRows; i++) { // numRows-2 because the parsing creates one extra empty landmark
+				var recordData = server.missionText[i].Split(','[0]);
+				//Only display landmark if there is data
+				if (recordData.Length > 1) {
+					GUI.Box(Rect(1,screen.rowHeight*i, Screen.width-2,screen.rowHeight),"","landmarkBox");
+					var isCompleted = "notVisitedLandmark";
+					if(PlayerPrefs.GetString(PlayerPrefs.GetString("PlayerID")+"Mission"+recordData[1]) == "completed") {
+						isCompleted = "visitedLandmark";
+					}
+					
+				   	if(GUI.Button(Rect(1,screen.rowHeight*i+1, Screen.width-2, screen.rowHeight-2), "", isCompleted)){
+				   		viewingLandmarkId=recordData[1]; 	
+				   		currentPage = lndmrksPage.viewLandmark;
+				   		server.getMissionDetails(recordData[1]);
+				   		yield location.getLocation();
+				   		checkMissionLocation();
+				   		viewLandmark(recordData[1]);
+				   	}
+				   	GUI.Label(Rect(Screen.width*0.1, screen.rowHeight*i + screen.rowHeight*0.2, Screen.width,screen.rowHeight), recordData[0]);
+			   	}			   	
 			}
 		GUI.EndScrollView ();
 	} else {
@@ -161,10 +191,15 @@ function showLandmarks() {
 	
 	//Surrounding Box and Button to create a New Mission
 	GUI.Box(Rect(0,Screen.height-Screen.height*0.1,Screen.width,Screen.height*0.1),"");
-	if(GUI.Button(Rect(1,Screen.height*0.9+1,Screen.width-2, Screen.height*0.1-2),"Create New Mission")){currentPage = lndmrksPage.createLandmark;}
+	if(GUI.Button(Rect(1,Screen.height*0.9+1,Screen.width-2, Screen.height*0.1-2),"Create New Landmark")){currentPage = lndmrksPage.createLandmark;}
 }
 
 function Update() {
+	if (Input.GetKeyDown(KeyCode.Escape)) {
+		if (currentPage == lndmrksPage.viewLandmarks) {
+			exitScreen.SetActive(true);
+		}
+	}
 	checkForTouch();
 }
 
@@ -240,10 +275,10 @@ function TouchToRowIndex(touchPos : Vector2) : int //this checks which row was t
 }
 
 function checkMissionLocation() {
-	var recordData = server.currentMissionDetails.Split(','[0]);
-	if (recordData.Length == 7){
+	//var recordData = server.currentMissionDetails.Split(','[0]);
+	if (server.currentMissionDetails.Length == 7){
 		lastDistance = getDistance(Input.location.lastData.latitude,Input.location.lastData.longitude,
-					       		   float.Parse(recordData[2]), float.Parse(recordData[3]));
+					       		   float.Parse(server.currentMissionDetails[2]), float.Parse(server.currentMissionDetails[3]));
 	}
 }
 
@@ -266,9 +301,6 @@ function submitLandmark() {
 	yield server.createMission(newMissionName, newMissionDescriptions, newMissionTags,
 							 Input.location.lastData.latitude, Input.location.lastData.longitude, 
 							 Input.location.lastData.altitude, Input.location.lastData.horizontalAccuracy);
-	//server.createMissionTest(newMissionName, newMissionDescriptions, newMissionTags,
-	//						 Input.location.lastData.latitude, Input.location.lastData.longitude, 
-	//						 Input.location.lastData.altitude, Input.location.lastData.horizontalAccuracy);
 	
 	yield server.updateMissions();
 	currentPage = lndmrksPage.viewLandmarks;

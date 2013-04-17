@@ -35,7 +35,7 @@ function showLogin() {
 	password = GUI.PasswordField(Rect(Screen.width*.1,screen.rowHeight*4, Screen.width*.8,screen.rowHeight*0.7), password, "*"[0]);
 		
 	GUI.Box(Rect(0,Screen.height*.9, Screen.width*.5,screen.rowHeight),"");
-	if(GUI.Button(Rect(0+1,Screen.height*.9+1, Screen.width*.5-2,screen.rowHeight-2),"Login")){server.login(username,password);}
+	if(GUI.Button(Rect(0+1,Screen.height*.9+1, Screen.width*.5-2,screen.rowHeight-2),"Login")){screen.toolbarInt = 1; server.login(username,password);}
 	
 	GUI.Box(Rect(Screen.width*.5,Screen.height*.9, Screen.width*.5,screen.rowHeight),"");
 	if(GUI.Button(Rect(Screen.width*.5+1,Screen.height*.9+1, Screen.width*.5-2,screen.rowHeight-2),"Register")){currentPage = profilePage.Register;}

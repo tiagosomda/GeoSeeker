@@ -12,7 +12,7 @@ var numbCols  : float;
 var rowHeight : float;
 var rowWidth  : float;
 
-static var toolbarInt : int = 0;
+public static var toolbarInt : int = 0;
 static var toolbarStrings : String[] = ["Profile","Landmarks","Leaderboard"];
 static var previousToolbarInt = 0;
 
@@ -25,7 +25,6 @@ var btnInactiveStyleName = "pButtonInactive";
 var topTabBtnsState = [btnActiveStyleName, btnInactiveStyleName, btnInactiveStyleName];
 
 function Start () {
-	server.getUserInfo();
 	server.getCompletedMissions();
 	
 	updateRowAndColSize();
@@ -55,10 +54,9 @@ function OnGUI() {
 	
 	
 	if (PlayerPrefs.GetString("PlayerID").Equals("") || PlayerPrefs.GetString("PlayerID").Contains("Error") ) {
-		//Top toolbar
+		//Logo
 		GUI.Box(Rect(0,0,Screen.width, Screen.height*0.1+2),"");
 		GUI.Button(Rect(1, 1, Screen.width-2, Screen.height*0.1),"GeoSeeker");
-		//GUI.Toolbar (Rect(1, 1, Screen.width-2, Screen.height*0.1), toolbarInt, "Login");
 		
 		Profile.draw();
 	} else {
