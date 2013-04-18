@@ -55,8 +55,8 @@ function OnGUI() {
 	
 	if (PlayerPrefs.GetString("PlayerID").Equals("") || PlayerPrefs.GetString("PlayerID").Contains("Error") ) {
 		//Logo
-		GUI.Box(Rect(0,0,Screen.width, Screen.height*0.1+2),"");
-		GUI.Button(Rect(1, 1, Screen.width-2, Screen.height*0.1),"GeoSeeker");
+		//GUI.Box(Rect(0,0,Screen.width, Screen.height*0.1+2),"");
+		//GUI.Button(Rect(1, 1, Screen.width-2, Screen.height*0.1),"GeoSeeker");
 		
 		Profile.draw();
 	} else {

@@ -29,6 +29,8 @@ private var createUserUrl : String;
 private var completedMissionsUrl : String;
 private var dominateLandmarkUrl : String;
 
+public var landmarks : Landmark[];
+
 // Secret Key matching on server-side script
 private var secretKey = "mySecretKey"; 
 
@@ -97,7 +99,28 @@ function updateMissions() {
     	missionText = testingData.Split('\n'[0]);
     } else {
        missionText = server_get.text.Split('\n'[0]);
+       landmarks = new Array(missionText.Length -1);
+    
+       for (var i = 0; i < missionText.Length-1; i++) {
+       		var temp = missionText[i].Split(','[0]);
+       		landmarks[i] = Landmark(temp[0],temp[1],temp[2],temp[3],temp[4],temp[5],temp[6],temp[7],temp[8],temp[9]);
+       }
     }
+}
+
+function getMissionDetails(id : String) {
+	var getMissionDetailsUrl = getMissionDetailsUrl + "id="+id;
+	server_post = WWW(getMissionDetailsUrl);
+	
+	yield server_post;
+	
+	if(server_post.error) {
+        print("There was an error deleting the mission: " + server_post.error);
+        print(server_post.text);
+    } else {
+        currentMissionDetails = server_post.text.Split(','[0]);
+    }
+
 }
 
 function getCompletedMissions() {
@@ -144,21 +167,6 @@ function deleteMission(n : String) {
         print("No error: " + server_post.text);
     }
 	
-}
-
-function getMissionDetails(id : String) {
-	var getMissionDetailsUrl = getMissionDetailsUrl + "id="+id;
-	server_post = WWW(getMissionDetailsUrl);
-	
-	yield server_post;
-	
-	if(server_post.error) {
-        print("There was an error deleting the mission: " + server_post.error);
-        print(server_post.text);
-    } else {
-        currentMissionDetails = server_post.text.Split(','[0]);
-    }
-
 }
 
 function completeMission(userId : String, missionId : String){
@@ -257,4 +265,30 @@ function getLeaderboardInfo() {
     		PlayerPrefs.SetString("RankPoints"+i, info[1]);
     	}
     }
+}
+
+class Landmark {
+	var id : String;
+	var name : String;
+	var lat : String;
+	var log : String; 
+	var alt : String;
+	var ha : String;
+	var description : String;
+	var ownerId : String;
+	var ownerName : String;
+	var ownerPoints : String;
+	
+	function Landmark( _id: String, _name : String, _lat : String,_log : String,_alt : String,_ha : String, _description : String, _ownerId : String, _ownerName : String, _ownerPoints : String) {
+		id = _id;
+		name = _name;
+		lat =_lat;
+		log =_log; 
+		alt =_alt;
+		ha =_ha;
+		description =_description;
+		ownerId =_ownerId;
+		ownerName =_ownerName;
+		ownerPoints =_ownerPoints;
+	}
 }

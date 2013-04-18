@@ -6,11 +6,27 @@ var username = "";
 var password = "";
 var email = "";
 
+var usernameRect : Rect;
+var usernameFieldRect : Rect;
+var passRect : Rect;
+var passFieldRect : Rect;
+
+var loginImage : Texture;
+
 enum profilePage {Login, Register, Profile}
 var currentPage = profilePage.Login;
 
+function Start() {
+	usernameRect.Set(Screen.width*.1,screen.rowHeight*6, Screen.width,screen.rowHeight);
+	usernameFieldRect.Set(Screen.width*.1,screen.rowHeight*6.5, Screen.width*.8,screen.rowHeight*0.7);
+	passRect.Set(Screen.width*.1,screen.rowHeight*7.5, Screen.width,screen.rowHeight);
+	passFieldRect.Set(Screen.width*.1,screen.rowHeight*8, Screen.width*.8,screen.rowHeight*0.7);
+}
+
 function draw () {
-	GUI.Box(new Rect(0,screen.rowHeight*1.5 - screen.rowHeight/2, Screen.width, screen.rowHeight*9),"");
+	//Background Image
+	GUI.DrawTexture(Rect(0,0,Screen.width,Screen.height),loginImage, ScaleMode.StretchToFill,true,1);
+	//GUI.Box(new Rect(0,0, Screen.width, Screen.height),"");
 	
 	if (PlayerPrefs.GetString("PlayerID").Equals("")) {
 		if (currentPage == profilePage.Login){
@@ -28,15 +44,18 @@ function draw () {
 }
 
 function showLogin() {
-	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*2, Screen.width,screen.rowHeight),"Username: ");
-	username = GUI.TextField(Rect(Screen.width*.1,screen.rowHeight*2.5, Screen.width*.8,screen.rowHeight*0.7), username);
-	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*3.5, Screen.width,screen.rowHeight),"Password: ");
-	//passwordToEdit = GUI.PasswordField (Rect (140, 312-36, 130, 20), passwordToEdit, "*"[0], 25);
-	password = GUI.PasswordField(Rect(Screen.width*.1,screen.rowHeight*4, Screen.width*.8,screen.rowHeight*0.7), password, "*"[0]);
-		
+	//Username
+	GUI.Label(usernameRect,"Username: ");
+	username = GUI.TextField(usernameFieldRect, username);
+	//Password
+	GUI.Label(passRect,"Password: ");
+	password = GUI.PasswordField(passFieldRect, password, "*"[0]);
+	
+	//Login	
 	GUI.Box(Rect(0,Screen.height*.9, Screen.width*.5,screen.rowHeight),"");
 	if(GUI.Button(Rect(0+1,Screen.height*.9+1, Screen.width*.5-2,screen.rowHeight-2),"Login")){screen.toolbarInt = 1; server.login(username,password);}
 	
+	//Register
 	GUI.Box(Rect(Screen.width*.5,Screen.height*.9, Screen.width*.5,screen.rowHeight),"");
 	if(GUI.Button(Rect(Screen.width*.5+1,Screen.height*.9+1, Screen.width*.5-2,screen.rowHeight-2),"Register")){currentPage = profilePage.Register;}
 }
@@ -74,26 +93,4 @@ function logout() {
     PlayerPrefs.SetString("PlayerName", "");
     PlayerPrefs.SetString("PlayerPoints","");
     username = password = "";
-}
-
-
-function ToDoBackUp() {
-
-	GUI.Box(new Rect(0,screen.rowHeight, Screen.width, screen.rowHeight*9),"");
-	GUI.Label(new Rect(Screen.width*.05,screen.rowHeight + Screen.height*.02,Screen.width,screen.rowHeight*9), "TO DO:"
-																												+"\nServer Side:"
-																												+"\n   Create user Script"
-																												+"\n   Authenticate Script"
-																												+"\n   Use JSON to send/retrieve data"
-																												+"\n\nClient Side:"
-																												+"\n   Use JSON to send/retrieve data"
-																												+"\n   Store Missions on Device's Storage"
-																												+"\n   Login Page"
-																												+"\n   Create user Page"
-																												+"\n   Show points/rank"
-																												+"\n   Show pushed achievements page"
-																												+"\n   Show achievements page"
-																												+"\n   Make a good GUI"
-																												+"\n      ~this one is crap"
-																												+"\n      ~~but we can use it to test stuff");
 }
