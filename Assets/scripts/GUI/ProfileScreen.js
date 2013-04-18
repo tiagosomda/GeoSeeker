@@ -12,7 +12,8 @@ var passRect : Rect;
 var passFieldRect : Rect;
 
 var loginImage : Texture;
-var logoImage : Texture;	
+var logoImage : Texture;
+var rankImage : Texture;	
 
 enum profilePage {Login, Register, Profile}
 var currentPage = profilePage.Login;
@@ -64,14 +65,32 @@ function showLogin() {
 }
 
 function showProfile() {
-	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*2, Screen.width,screen.rowHeight), PlayerPrefs.GetString("PlayerName"));
-	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*3, Screen.width,screen.rowHeight), "ID: " + PlayerPrefs.GetString("PlayerID"));	
-	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*4, Screen.width,screen.rowHeight), "Points: " + PlayerPrefs.GetString("PlayerPoints"));
-	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*5, Screen.width,screen.rowHeight), "Rank: " + "Freshman");
-	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*6, Screen.width,screen.rowHeight), "Landmarks: ");
-	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*7, Screen.width,screen.rowHeight), "Visited: " + PlayerPrefs.GetString("PlayerCompleted"));
-	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*8, Screen.width,screen.rowHeight), "Dominated: " + "None");
-		
+
+	//Player Name
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.15, Screen.width, Screen.height*0.1), PlayerPrefs.GetString("PlayerName"));
+	
+	//Points
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.25, Screen.width, Screen.height*0.1),"Points: " + PlayerPrefs.GetString("PlayerPoints"));
+	
+	//Ranks
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.3, Screen.width, Screen.height*0.1),"Rank: " + "Freshamn");
+	
+	//Rank Image
+	GUI.DrawTexture(Rect(Screen.width*0.6,Screen.height*0.2, Screen.width*.3, Screen.width*.3	),rankImage);
+	//Landmarks
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.4, Screen.width, Screen.height*0.1),"Landmarks");
+	
+	//Visited vs Total
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.5, Screen.width, Screen.height*0.1),"Visited: " + PlayerPrefs.GetString("PlayerCompleted"));
+	
+	//Owned Landmark
+	//print(PlayerPrefs.GetString("PlayerDominatedName"));
+	if (PlayerPrefs.GetString("PlayerDominatedName") != "") {
+		GUI.Label(Rect(Screen.width*0.1,Screen.height*0.55, Screen.width, Screen.height*0.1),"Dominates " + PlayerPrefs.GetString("PlayerDominatedName"));
+	} else {
+		GUI.Label(Rect(Screen.width*0.1,Screen.height*0.55, Screen.width, Screen.height*0.1),"Dominates " + "Nothing!");
+	}
+	//Logout Button		
 	GUI.Box(Rect(0,Screen.height*.9, Screen.width,screen.rowHeight),"");
 	if(GUI.Button(Rect(0+1,Screen.height*.9+1, Screen.width-2,screen.rowHeight-2),"Log out")){logout();}
 }

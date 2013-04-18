@@ -72,7 +72,7 @@ function showSingleLandmark(index : int) {
 	//Mission Not Completed
 	if (PlayerPrefs.GetString(PlayerPrefs.GetString("PlayerID")+"Mission"+server.landmarks[index].id) != "completed") {
 		//Mission Not visited Box
-		GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"");
+		GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"","lightRed");
 		
 		if (lastDistance < 0.01) {
 			if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "REGISTER LANDMARK")) {
@@ -93,7 +93,7 @@ function showSingleLandmark(index : int) {
 			//You are the owner
 			if (server.landmarks[index].ownerId == PlayerPrefs.GetString("PlayerID")) {
 				//Golden box
-				GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"");
+				GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"","golden");
 				if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "YOU ARE THE DOMINATOR")) {
 				
 				}
@@ -101,14 +101,14 @@ function showSingleLandmark(index : int) {
 			} else if (int.Parse(server.landmarks[index].ownerPoints) < int.Parse(PlayerPrefs.GetString("PlayerPoints"))){
 				//Green
 				GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"");
-				if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "STEAL LANDMARK")) {
+				if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "STEAL LANDMARK","lightGreen")) {
 					audio.PlayOneShot(dominateSound);
 					server.dominateLandmark(index);
 				}
 			//You can't steal
 			} else {
 				//Green
-				GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"");
+				GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"","lightGreen");
 				if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "NOT ENOUGH POINTS TO STEAL")) {
 				
 				}	
@@ -116,7 +116,7 @@ function showSingleLandmark(index : int) {
 		//There is no owner
 		} else {
 			//Green
-			GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"");
+			GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"","lightGreen");
 			if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "TAKE OVER LANDMARK")) {
 				audio.PlayOneShot(dominateSound);
 				server.dominateLandmark(index);			
@@ -150,85 +150,6 @@ function showSingleLandmark(index : int) {
 
 }
 
-function viewLandmark(index : int) {
-	checkMissionLocation();
-	
-	//If mission was completed	
-	if(PlayerPrefs.GetString(PlayerPrefs.GetString("PlayerID")+"Mission"+server.landmarks[index].id) == "completed") {
-		//Draw Box Green Box for completed Mission
-		GUI.Box(Rect(0,screen.rowHeight,Screen.width, Screen.height),"","completedMissionBox");
-		GUI.Box(Rect(Screen.width*.1-1,screen.rowHeight*2-1, Screen.width*0.8+2, Screen.height*0.25+2),"Google Maps","landmarkBox");
-		GUI.Label(Rect(Screen.width*.4,screen.rowHeight*3, Screen.width,screen.rowHeight), "In Range!");
-		GUI.Box(Rect(0,Screen.height*0.9, Screen.width, screen.rowHeight),"");
-
-		//There is an onwer
-		if(server.landmarks[index].ownerId != "NONE") {
-			//You are the owner
-			if (server.landmarks[index].id == PlayerPrefs.GetString("PlayerID")) {
-				GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "YOU ARE THE DOMINATOR");
-			//You aren't the owner and you have more points
-			} else	if (int.Parse(server.landmarks[index].ownerPoints) < int.Parse(PlayerPrefs.GetString("PlayerPoints"))){
-				if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Dominate Landmark")) {
-					server.dominateLandmark(index);
-					audio.PlayOneShot(dominateSound);
-					currentPage = lndmrksPage.viewLandmarks;
-				}
-			//You aren't the owner and you don't have enough points to dominate the landmark
-			} else {
-				if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Can't Dominate")) { 
-					//screen.toolbarInt = 0;
-				}
-			}
-		//There is no owner
-		} else {
-			if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Dominate Landmark")) {
-				audio.PlayOneShot(dominateSound);
-				server.dominateLandmark(index);
-				currentPage = lndmrksPage.viewLandmarks;
-			}
-		}	
-	//If mission was not completed
-	} else {
-		GUI.Box(Rect(0,screen.rowHeight+2,Screen.width, Screen.height),"");
-		
-		if (lastDistance < 0.01) { //Within Range to complete
-			GUI.Box(Rect(Screen.width*.1-1,screen.rowHeight*2-1, Screen.width*0.8+2, Screen.height*0.25+2),"Google Maps","landmarkBox");
-			GUI.Label(Rect(Screen.width*.4,screen.rowHeight*3, Screen.width,screen.rowHeight), "In Range!");
-			GUI.Box(Rect(0,Screen.height*0.9, Screen.width, screen.rowHeight),"");
-	
-			if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Complete Mission")) { 
-				server.completeMission(index);
-				audio.PlayOneShot(completedSound);
-				currentPage = lndmrksPage.viewLandmarks;
-			}
-		} else { // Not within Range to complete
-			var d;
-			var temp : int;
-			if (lastDistance > 1) {
-				temp = lastDistance;
-				d = temp + " km away";
-			} else {
-				temp = lastDistance*1000;
-				d = temp + " meters away";
-			}
-			
-			GUI.Box(Rect(Screen.width*.1-1,screen.rowHeight*2-1, Screen.width*0.8+2, Screen.height*0.25+2),"Google Maps","landmarkBox");
-			GUI.Label(Rect(Screen.width*.4,screen.rowHeight*3, Screen.width,screen.rowHeight), d.ToString());
-			GUI.Box(Rect(0,Screen.height*0.9, Screen.width, screen.rowHeight),"");
-			
-			if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Update Location")){location.getLocation();}
-		}	
-	}
-	
-	//Back Button to view all landmarks
-	GUI.Box(Rect(0,screen.rowHeight,Screen.width, screen.rowHeight/2),"");
-	if (GUI.Button(Rect(1,screen.rowHeight+1,Screen.width-2, screen.rowHeight/2-1), "Back")){currentPage = lndmrksPage.viewLandmarks;}	
-	
-	//Only display description if recordData was parsed
-	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*4.5, Screen.width*0.8, screen.rowHeight),"Description: ");
-	GUI.Label(Rect(Screen.width*.1+5,screen.rowHeight*5+5, Screen.width*0.8-10, Screen.height*0.35-10),server.landmarks[index].description);
-
-}
 
 function showLandmarks() {
 	GUI.Box(new Rect(0,screen.rowHeight*1.5 - screen.rowHeight/2, Screen.width, screen.rowHeight*9),"");
@@ -245,6 +166,10 @@ function showLandmarks() {
 				if(server.landmarks[i] != null) {				 
 					if(PlayerPrefs.GetString(PlayerPrefs.GetString("PlayerID")+"Mission"+server.landmarks[i].id) == "completed") {
 						isCompleted = "visitedLandmark";
+					}
+					
+					if (PlayerPrefs.GetString("PlayerDominatedId") == server.landmarks[i].id) {
+						isCompleted = "ownedLandmark";
 					}
 						
 					if(GUI.Button(Rect(1,screen.rowHeight*i+1, Screen.width-2, screen.rowHeight-2), "", isCompleted)){
@@ -291,8 +216,9 @@ function createLandmark() {
 	}
 	
 	//Landmark Picture
-	GUI.DrawTexture(Rect(Screen.width*0.1,Screen.height*0.25, Screen.width*.4, Screen.width*0.4), pic);
-	//GUI.DrawTexture(Rect(0,-Screen.width,Screen.height,Screen.width), pic);	
+	//GUIUtility.RotateAroundPivot(90.0, Vector2(0,0));
+	GUI.DrawTexture(Rect(Screen.width*0.1,Screen.height*0.25, Screen.width*.4, Screen.width*0.4), pic);	
+	//GUIUtility.RotateAroundPivot(-90.0, Vector2(0,0));
 	
 	//GPS Coordinates
 	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.25, Screen.width*.5, Screen.width*0.4), "GPS Coordinates:");

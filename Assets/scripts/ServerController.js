@@ -12,7 +12,7 @@ var missionText : String[];
 var server_get : WWW;
 var server_post: WWW;
 var currentMissionDetails : String[];
-var userInfo : String;
+//var userInfo : String;
 var leaderboardList : String[];
 var completedMissions : String;
 
@@ -39,7 +39,7 @@ var testingData : String = "Landmark 1\nLandmark 2\nLandmark 3\nLandmark 4\nLand
 
 function Awake() {
 
-	userInfo = "";
+	//userInfo = "";
 
 	addMissionUrl  = "http://www.tiagosomda.com/geoseeker/addLandmark.php?"; 
 	getMissionUrl = "http://www.tiagosomda.com/geoseeker/getLandmark.php";
@@ -199,6 +199,7 @@ function getUserInfo(){
 	
 	yield server_post;
 	
+	print(getUserInfoUrl);
 	if(server_post.error) {
         print("There was an error getting the user info: " + server_post.error);
     } else {
@@ -207,6 +208,10 @@ function getUserInfo(){
     	PlayerPrefs.SetString("PlayerName", temp[1]);
     	PlayerPrefs.SetString("PlayerPoints", temp[2]);
     	PlayerPrefs.SetString("PlayerCompleted", temp[3]);
+    	PlayerPrefs.SetString("PlayerDominatedId", temp[4]);
+    	PlayerPrefs.SetString("PlayerDominatedName", temp[5]);
+    	
+    	print("D ID" + temp[4]);
     }
 }
 
@@ -216,6 +221,9 @@ function login(username : String, password : String) {
 	server_post = WWW(loginUrl);
 	
 	yield server_post;
+	
+	
+	print(loginUrl);
 	
 	if(server_post.error) {
         print("There was an error logging: " + server_post.error);
@@ -228,6 +236,8 @@ function login(username : String, password : String) {
     	    PlayerPrefs.SetString("PlayerName", temp[1]);
     	    PlayerPrefs.SetString("PlayerPoints", temp[2]);
     	    PlayerPrefs.SetString("PlayerCompleted", temp[3]);
+        	PlayerPrefs.SetString("PlayerDominatedId", temp[4]);
+	    	PlayerPrefs.SetString("PlayerDominatedName", temp[5]);
     	}
     }
 }

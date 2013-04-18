@@ -34,12 +34,19 @@ function showLeaderboard() {
 	GUI.Box(new Rect(0,screen.rowHeight+1, Screen.width, screen.rowHeight*9),"");
 	
 	
+	//Rank
+	GUI.Label(Rect(Screen.width*0.1,screen.rowHeight,Screen.width*0.3,Screen.height*0.1),"Rank");
+	//Name
+	GUI.Label(Rect(Screen.width*0.6,screen.rowHeight,Screen.width*0.3,Screen.height*0.1),"Player");
 	
+	//Points
+	GUI.Label(Rect(Screen.width*0.3,screen.rowHeight,Screen.width*0.3,Screen.height*0.1),"Points");
 	
+	//Draws Leaderboard
 	numRows = server.leaderboardList.Length;
 	if (numRows != 0) {
 		var i = 0;
-		scrollPosition = GUI.BeginScrollView(Rect(0, screen.rowHeight, Screen.width, Screen.height*0.9), scrollPosition, Rect(0, 0, Screen.width, (Screen.height*0.1)*(numRows-1)));
+		scrollPosition = GUI.BeginScrollView(Rect(0, screen.rowHeight*2, Screen.width, Screen.height*0.9), scrollPosition, Rect(0, 0, Screen.width, (Screen.height*0.1)*(numRows-1)));
 			for (i = 0; i < server.leaderboardList.Length-1; i++) {
 				GUI.Box(Rect(0,screen.rowHeight*i, Screen.width,screen.rowHeight),"");
 				GUI.Label(Rect(Screen.width*0.1 , screen.rowHeight*i+1, screen.rowWidth, screen.rowHeight-2),(i+1).ToString());	
