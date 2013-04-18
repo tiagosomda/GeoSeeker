@@ -66,29 +66,38 @@ function showLogin() {
 
 function showProfile() {
 
+	//Background Image
+	GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"","lightRed");
+	
 	//Player Name
-	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.15, Screen.width, Screen.height*0.1), PlayerPrefs.GetString("PlayerName"));
+	GUI.skin.customStyles[9].fontSize = Screen.width/6;
+	GUI.skin.customStyles[10].fontSize = Screen.width/12;
+	
+	
+	GUI.Label(Rect(0,Screen.height*0.15, Screen.width, Screen.height*0.1), PlayerPrefs.GetString("PlayerName"), "title");
 	
 	//Points
-	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.25, Screen.width, Screen.height*0.1),"Points: " + PlayerPrefs.GetString("PlayerPoints"));
+	GUI.Label(Rect(0,Screen.height*0.3, Screen.width, Screen.height*0.1),"Points: " + PlayerPrefs.GetString("PlayerPoints"), "text");
 	
 	//Ranks
-	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.3, Screen.width, Screen.height*0.1),"Rank: " + "Freshamn");
+	GUI.Label(Rect(0,Screen.height*0.4, Screen.width, Screen.height*0.1),"Rank: " + "Freshamn", "text");
 	
 	//Rank Image
-	GUI.DrawTexture(Rect(Screen.width*0.6,Screen.height*0.2, Screen.width*.3, Screen.width*.3	),rankImage);
+	GUI.DrawTexture(Rect(Screen.width*0.8,Screen.height*0.38, Screen.width*.15, Screen.width*.15),rankImage);
+	
 	//Landmarks
-	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.4, Screen.width, Screen.height*0.1),"Landmarks");
+	GUI.Label(Rect(0,Screen.height*0.5, Screen.width, Screen.height*0.1),"Landmarks", "title");
 	
 	//Visited vs Total
-	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.5, Screen.width, Screen.height*0.1),"Visited: " + PlayerPrefs.GetString("PlayerCompleted"));
+	//GUI.Label(Rect(0,Screen.height*0.3, Screen.width, Screen.height*0.1),"Points: " + PlayerPrefs.GetString("PlayerPoints"), "text");
+	GUI.Label(Rect(0,Screen.height*0.65, Screen.width, Screen.height*0.1),"Visited: " + PlayerPrefs.GetString("PlayerCompleted"), "text");
 	
 	//Owned Landmark
 	//print(PlayerPrefs.GetString("PlayerDominatedName"));
 	if (PlayerPrefs.GetString("PlayerDominatedName") != "") {
-		GUI.Label(Rect(Screen.width*0.1,Screen.height*0.55, Screen.width, Screen.height*0.1),"Dominates " + PlayerPrefs.GetString("PlayerDominatedName"));
+		GUI.Label(Rect(0,Screen.height*0.75, Screen.width, Screen.height*0.1),"Dominates " + PlayerPrefs.GetString("PlayerDominatedName"), "text");
 	} else {
-		GUI.Label(Rect(Screen.width*0.1,Screen.height*0.55, Screen.width, Screen.height*0.1),"Dominates " + "Nothing!");
+		GUI.Label(Rect(0,Screen.height*0.75, Screen.width, Screen.height*0.1),"Dominates " + "Nothing!", "text");
 	}
 	//Logout Button		
 	GUI.Box(Rect(0,Screen.height*.9, Screen.width,screen.rowHeight),"");

@@ -31,16 +31,16 @@ function draw () {
 function showLeaderboard() {
 	if (server.leaderboardList.Length == 0) {}
 	
-	GUI.Box(new Rect(0,screen.rowHeight+1, Screen.width, screen.rowHeight*9),"");
-	
+	//Background Image
+	GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"","lightRed");
 	
 	//Rank
-	GUI.Label(Rect(Screen.width*0.1,screen.rowHeight,Screen.width*0.3,Screen.height*0.1),"Rank");
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.15,Screen.width*0.3,Screen.height*0.1),"Rank", "text2");
 	//Name
-	GUI.Label(Rect(Screen.width*0.6,screen.rowHeight,Screen.width*0.3,Screen.height*0.1),"Player");
+	GUI.Label(Rect(Screen.width*0.4,Screen.height*0.15,Screen.width*0.3,Screen.height*0.1),"Player", "text2");
 	
 	//Points
-	GUI.Label(Rect(Screen.width*0.3,screen.rowHeight,Screen.width*0.3,Screen.height*0.1),"Points");
+	GUI.Label(Rect(Screen.width*0.7,Screen.height*0.15,Screen.width*0.3,Screen.height*0.1),"Points", "text2");
 	
 	//Draws Leaderboard
 	numRows = server.leaderboardList.Length;
@@ -48,10 +48,10 @@ function showLeaderboard() {
 		var i = 0;
 		scrollPosition = GUI.BeginScrollView(Rect(0, screen.rowHeight*2, Screen.width, Screen.height*0.9), scrollPosition, Rect(0, 0, Screen.width, (Screen.height*0.1)*(numRows-1)));
 			for (i = 0; i < server.leaderboardList.Length-1; i++) {
-				GUI.Box(Rect(0,screen.rowHeight*i, Screen.width,screen.rowHeight),"");
-				GUI.Label(Rect(Screen.width*0.1 , screen.rowHeight*i+1, screen.rowWidth, screen.rowHeight-2),(i+1).ToString());	
-				GUI.Label(Rect(screen.rowWidth,screen.rowHeight*i+1, screen.rowWidth, screen.rowHeight-2),PlayerPrefs.GetString("RankName"+i));	
-				GUI.Label(Rect(screen.rowWidth*2,screen.rowHeight*i+1,screen.rowWidth, screen.rowHeight-2), PlayerPrefs.GetString("RankPoints"+i));
+				//GUI.Box(Rect(0,screen.rowHeight*i, Screen.width,screen.rowHeight),"");
+				GUI.Label(Rect(Screen.width*0.05, screen.rowHeight*i+1, screen.rowWidth, screen.rowHeight-2),(i+1).ToString() + " : Freshman", "text3");
+				GUI.Label(Rect(Screen.width*0.4,screen.rowHeight*i+1, screen.rowWidth, screen.rowHeight-2),PlayerPrefs.GetString("RankName"+i), "text3");	
+				GUI.Label(Rect(Screen.width*0.75,screen.rowHeight*i+1,screen.rowWidth, screen.rowHeight-2), PlayerPrefs.GetString("RankPoints"+i), "text3");
 			}
 		GUI.EndScrollView ();
 	} else {

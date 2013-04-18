@@ -94,7 +94,7 @@ function showSingleLandmark(index : int) {
 			if (server.landmarks[index].ownerId == PlayerPrefs.GetString("PlayerID")) {
 				//Golden box
 				GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"","golden");
-				if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "YOU ARE THE DOMINATOR")) {
+				if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "YOU ARE THE OWNER")) {
 				
 				}
 			//You can Steal the Landmark
@@ -124,26 +124,30 @@ function showSingleLandmark(index : int) {
 		}
 	}
 	
+	GUI.skin.customStyles[11].fontSize = Screen.width/15;
+	GUI.skin.customStyles[12].fontSize = Screen.width/20;
 	
 	//LandmarkName
-	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.15, Screen.width*.4, Screen.width*0.4), server.landmarks[index].name);
+	GUI.Label(Rect(0,Screen.height*0.15, Screen.width, Screen.width*0.1), server.landmarks[index].name, "title");
 	
 	//Landmark Picture
 	GUI.DrawTexture(Rect(Screen.width*0.1,Screen.height*0.25, Screen.width*.4, Screen.width*0.4),landmarkPicture);	
 	
 	//DominatedBy
-	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.25, Screen.width*.4, Screen.width*0.4), "Dominated By:");
+	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.3, Screen.width*.4, Screen.width*0.4), "Dominated By:", "text2");
 	
 	//OwnerName
-	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.3, Screen.width*.4, Screen.width*0.4), server.landmarks[index].ownerName);
+	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.35, Screen.width*.4, Screen.width*0.4), "Owner", "text3");
+	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.4, Screen.width*.4, Screen.width*0.4), server.landmarks[index].ownerName, "text3");
 	
 	//OwnerPoints
-	GUI.Label(Rect(Screen.width*0.8,Screen.height*0.3, Screen.width*.4, Screen.width*0.4), server.landmarks[index].ownerPoints);
+	GUI.Label(Rect(Screen.width*0.8,Screen.height*0.35, Screen.width*.4, Screen.width*0.4), "Points", "text3");
+	GUI.Label(Rect(Screen.width*0.8,Screen.height*0.4, Screen.width*.4, Screen.width*0.4), server.landmarks[index].ownerPoints, "text3");
 	
 	//Description Label
-	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.55, Screen.width*.4, Screen.width*0.4), "Description: ");
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.55, Screen.width*.4, Screen.width*0.4), "Description: ", "text2");
 	//Description Text
-	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.6, Screen.width*.4, Screen.width*0.4), server.landmarks[index].description);
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.6, Screen.width*.4, Screen.width*0.4), server.landmarks[index].description, "text3");
 	
 	//GoogleMaps
 	GUI.DrawTexture(Rect(Screen.width*0.55,Screen.height*0.55, Screen.width*.4, Screen.width*0.4), googleMapPicture);
@@ -180,7 +184,7 @@ function showLandmarks() {
 						checkMissionLocation();
 						showSingleLandmark(i);
 					}
-					GUI.Label(Rect(Screen.width*0.1, screen.rowHeight*i + screen.rowHeight*0.2, Screen.width,screen.rowHeight), server.landmarks[i].name);
+					GUI.Label(Rect(0, screen.rowHeight*i + screen.rowHeight*0.2, Screen.width,screen.rowHeight), server.landmarks[i].name, "text");
 				}	   	
 			}
 		GUI.EndScrollView ();
@@ -221,17 +225,17 @@ function createLandmark() {
 	//GUIUtility.RotateAroundPivot(-90.0, Vector2(0,0));
 	
 	//GPS Coordinates
-	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.25, Screen.width*.5, Screen.width*0.4), "GPS Coordinates:");
+	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.25, Screen.width*.5, Screen.width*0.4), "GPS Loc:", "text2");
 	
 	//X Loc
-	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.3, Screen.width*.4, Screen.width*0.4), "X Loc: "+ Input.location.lastData.latitude);
+	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.3, Screen.width*.4, Screen.width*0.4), "X Loc: "+ Input.location.lastData.latitude, "text3");
 	//Y Loc
-	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.35, Screen.width*.4, Screen.width*0.4), "Y Loc: "+ Input.location.lastData.longitude);
+	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.35, Screen.width*.4, Screen.width*0.4), "Y Loc: "+ Input.location.lastData.longitude, "text3");
 	//Altitude
-	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.4, Screen.width*.4, Screen.width*0.4), "Altitude: "+ Input.location.lastData.altitude);
+	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.4, Screen.width*.4, Screen.width*0.4), "Altitude: "+ Input.location.lastData.altitude, "text3");
 	
 	//Description Label
-	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.55, Screen.width*.4, Screen.width*0.4), "Description: ");
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.55, Screen.width*.4, Screen.width*0.4), "Description: ", "text2");
 	
 	//Description Text Field
 	newMissionDescriptions = GUI.TextField(Rect(Screen.width*0.1,Screen.height*0.6, Screen.width*.4, Screen.width*0.4), newMissionDescriptions);
