@@ -3,6 +3,8 @@
 var screen : ScreenController;
 var server : ServerController;
 var location : LocationController;
+
+var cameraFeed : GameObject;
 var exitScreen : GameObject;
 var googleMap : LandmarkGoogleMap;
 var completedSound : AudioClip;
@@ -17,6 +19,14 @@ private var newMissionTags : String;
 
 private var viewingLandmarkIndex : int;
 private var lastDistance : double;
+
+public var 	landmarkPicture : Texture;
+public var  googleMapPicture : Texture;
+
+public var  webcamTexture : WebCamTexture;
+public var  landmarkPicture_pre : Texture;
+public var  landmarkPicture_post : Texture;
+public var 	pictureTaken = false;
 
 
 // Internal variables for managing touches and drags
@@ -36,7 +46,7 @@ private var listMargin : Vector2;
 private var windowRect :Rect ;
 
 function Start() {
-	yield server.updateMissions();
+	server.updateMissions();
 	currentPage = lndmrksPage.viewLandmarks;
 	location.getLocation();
 
@@ -49,16 +59,99 @@ function draw() {
 	if (currentPage == lndmrksPage.createLandmark) {
 		createLandmark();
 	} else  if (currentPage == lndmrksPage.viewLandmark) {
-		viewLandmark(viewingLandmarkIndex);
+		showSingleLandmark(viewingLandmarkIndex);
 	} else if (currentPage == lndmrksPage.viewLandmarks) {
 		showLandmarks();
 	}
 
 }
 
-function viewLandmark(index : int) {
+function showSingleLandmark(index : int) {
 	checkMissionLocation();
 	
+	//Mission Not Completed
+	if (PlayerPrefs.GetString(PlayerPrefs.GetString("PlayerID")+"Mission"+server.landmarks[index].id) != "completed") {
+		//Mission Not visited Box
+		GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"");
+		
+		if (lastDistance < 0.01) {
+			if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "REGISTER LANDMARK")) {
+				server.completeMission(index);
+				audio.PlayOneShot(completedSound);
+			}	
+		} else {
+			if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "NOT CLOSE ENOUGH")) {
+		
+			}
+		}
+		
+
+	//Mission Completed
+	} else {
+		//There is a owner
+		if(server.landmarks[index].ownerId != "NONE") {
+			//You are the owner
+			if (server.landmarks[index].ownerId == PlayerPrefs.GetString("PlayerID")) {
+				//Golden box
+				GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"");
+				if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "YOU ARE THE DOMINATOR")) {
+				
+				}
+			//You can Steal the Landmark
+			} else if (int.Parse(server.landmarks[index].ownerPoints) < int.Parse(PlayerPrefs.GetString("PlayerPoints"))){
+				//Green
+				GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"");
+				if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "STEAL LANDMARK")) {
+					audio.PlayOneShot(dominateSound);
+					server.dominateLandmark(index);
+				}
+			//You can't steal
+			} else {
+				//Green
+				GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"");
+				if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "NOT ENOUGH POINTS TO STEAL")) {
+				
+				}	
+			}
+		//There is no owner
+		} else {
+			//Green
+			GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"");
+			if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "TAKE OVER LANDMARK")) {
+				audio.PlayOneShot(dominateSound);
+				server.dominateLandmark(index);			
+			}
+		}
+	}
+	
+	
+	//LandmarkName
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.15, Screen.width*.4, Screen.width*0.4), server.landmarks[index].name);
+	
+	//Landmark Picture
+	GUI.DrawTexture(Rect(Screen.width*0.1,Screen.height*0.25, Screen.width*.4, Screen.width*0.4),landmarkPicture);	
+	
+	//DominatedBy
+	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.25, Screen.width*.4, Screen.width*0.4), "Dominated By:");
+	
+	//OwnerName
+	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.3, Screen.width*.4, Screen.width*0.4), server.landmarks[index].ownerName);
+	
+	//OwnerPoints
+	GUI.Label(Rect(Screen.width*0.8,Screen.height*0.3, Screen.width*.4, Screen.width*0.4), server.landmarks[index].ownerPoints);
+	
+	//Description Label
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.55, Screen.width*.4, Screen.width*0.4), "Description: ");
+	//Description Text
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.6, Screen.width*.4, Screen.width*0.4), server.landmarks[index].description);
+	
+	//GoogleMaps
+	GUI.DrawTexture(Rect(Screen.width*0.55,Screen.height*0.55, Screen.width*.4, Screen.width*0.4), googleMapPicture);
+
+}
+
+function viewLandmark(index : int) {
+	checkMissionLocation();
 	
 	//If mission was completed	
 	if(PlayerPrefs.GetString(PlayerPrefs.GetString("PlayerID")+"Mission"+server.landmarks[index].id) == "completed") {
@@ -76,7 +169,7 @@ function viewLandmark(index : int) {
 			//You aren't the owner and you have more points
 			} else	if (int.Parse(server.landmarks[index].ownerPoints) < int.Parse(PlayerPrefs.GetString("PlayerPoints"))){
 				if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Dominate Landmark")) {
-					server.dominateLandmark(server.landmarks[index].id);
+					server.dominateLandmark(index);
 					audio.PlayOneShot(dominateSound);
 					currentPage = lndmrksPage.viewLandmarks;
 				}
@@ -90,7 +183,7 @@ function viewLandmark(index : int) {
 		} else {
 			if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Dominate Landmark")) {
 				audio.PlayOneShot(dominateSound);
-				server.dominateLandmark(server.landmarks[index].id);
+				server.dominateLandmark(index);
 				currentPage = lndmrksPage.viewLandmarks;
 			}
 		}	
@@ -104,7 +197,7 @@ function viewLandmark(index : int) {
 			GUI.Box(Rect(0,Screen.height*0.9, Screen.width, screen.rowHeight),"");
 	
 			if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Complete Mission")) { 
-				server.completeMission(PlayerPrefs.GetString("PlayerID"), server.landmarks[index].id);
+				server.completeMission(index);
 				audio.PlayOneShot(completedSound);
 				currentPage = lndmrksPage.viewLandmarks;
 			}
@@ -123,7 +216,7 @@ function viewLandmark(index : int) {
 			GUI.Label(Rect(Screen.width*.4,screen.rowHeight*3, Screen.width,screen.rowHeight), d.ToString());
 			GUI.Box(Rect(0,Screen.height*0.9, Screen.width, screen.rowHeight),"");
 			
-			if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Update Location")){yield location.getLocation();}
+			if(GUI.Button(Rect(1,Screen.height*0.9+1, Screen.width-2, screen.rowHeight -2), "Update Location")){location.getLocation();}
 		}	
 	}
 	
@@ -149,19 +242,21 @@ function showLandmarks() {
 				//Only display landmark if there is data
 				GUI.Box(Rect(1,screen.rowHeight*i, Screen.width-2,screen.rowHeight),"","landmarkBox");
 				var isCompleted = "notVisitedLandmark";
-				if(PlayerPrefs.GetString(PlayerPrefs.GetString("PlayerID")+"Mission"+server.landmarks[i].id) == "completed") {
-					isCompleted = "visitedLandmark";
-				}
-					
-				if(GUI.Button(Rect(1,screen.rowHeight*i+1, Screen.width-2, screen.rowHeight-2), "", isCompleted)){
-					viewingLandmarkIndex=i;
-					currentPage = lndmrksPage.viewLandmark;
-					server.getMissionDetails(server.landmarks[i].id);
-					yield location.getLocation();
-					checkMissionLocation();
-					viewLandmark(i);
-				}
-				GUI.Label(Rect(Screen.width*0.1, screen.rowHeight*i + screen.rowHeight*0.2, Screen.width,screen.rowHeight), server.landmarks[i].name);	   	
+				if(server.landmarks[i] != null) {				 
+					if(PlayerPrefs.GetString(PlayerPrefs.GetString("PlayerID")+"Mission"+server.landmarks[i].id) == "completed") {
+						isCompleted = "visitedLandmark";
+					}
+						
+					if(GUI.Button(Rect(1,screen.rowHeight*i+1, Screen.width-2, screen.rowHeight-2), "", isCompleted)){
+						viewingLandmarkIndex=i;
+						currentPage = lndmrksPage.viewLandmark;
+						server.getMissionDetails(server.landmarks[i].id);
+						location.getLocation();
+						checkMissionLocation();
+						showSingleLandmark(i);
+					}
+					GUI.Label(Rect(Screen.width*0.1, screen.rowHeight*i + screen.rowHeight*0.2, Screen.width,screen.rowHeight), server.landmarks[i].name);
+				}	   	
 			}
 		GUI.EndScrollView ();
 	} else {
@@ -170,24 +265,58 @@ function showLandmarks() {
 	
 	//Surrounding Box and Button to create a New Mission
 	GUI.Box(Rect(0,Screen.height-Screen.height*0.1,Screen.width,Screen.height*0.1),"");
-	if(GUI.Button(Rect(1,Screen.height*0.9+1,Screen.width-2, Screen.height*0.1-2),"Create New Landmark")){currentPage = lndmrksPage.createLandmark; yield location.getLocation();}
+	if(GUI.Button(Rect(1,Screen.height*0.9+1,Screen.width-2, Screen.height*0.1-2),"Create New Landmark")){currentPage = lndmrksPage.createLandmark; location.getLocation();}
 }
 
 function createLandmark() {
-	GUI.Box(Rect(0,screen.rowHeight+2,Screen.width, Screen.height),"");
-	GUI.Box(Rect(0,screen.rowHeight+2,Screen.width, screen.rowHeight/2),"");
-	if (GUI.Button(Rect(1,screen.rowHeight+2,Screen.width-2, screen.rowHeight/2-1), "Back")){currentPage = lndmrksPage.viewLandmarks;}
 
-	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*2, Screen.width, screen.rowHeight), "Landmark Name: ");
-	newMissionName = GUI.TextField(Rect(Screen.width*.1,screen.rowHeight*2.5, Screen.width*.8, screen.rowHeight*0.7), newMissionName,20);
+	// BackgroundImage
+	GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"");
+
+	//LandmarkName Field
+	newMissionName = GUI.TextField(Rect(Screen.width*0.1,Screen.height*0.15, Screen.width*.8, screen.rowHeight*0.7), newMissionName,20);
 	
-	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*3.2, Screen.width, screen.rowHeight), "Description: ");
-	newMissionDescriptions = GUI.TextField(Rect(Screen.width*.1,screen.rowHeight*3.7, Screen.width*0.8, Screen.width*0.2), newMissionDescriptions);
+	//Selects Picture or Photo Image
+	var pic : Texture;
+	if(pictureTaken) {
+		pic = landmarkPicture_post;
+	} else {
+		pic = landmarkPicture_pre;
+	}
 	
-	GUI.Box(Rect(Screen.width*.1,screen.rowHeight*5.5, Screen.width*0.8, Screen.height*0.25),"Google Maps");
+
+	if(GUI.Button(Rect(Screen.width*0.1,Screen.height*0.25, Screen.width*.4, Screen.width*0.4),"")) {
+		cameraFeed.SetActive(true);
+		pictureTaken = false;
+	}
 	
+	//Landmark Picture
+	GUI.DrawTexture(Rect(Screen.width*0.1,Screen.height*0.25, Screen.width*.4, Screen.width*0.4), pic);
+	//GUI.DrawTexture(Rect(0,-Screen.width,Screen.height,Screen.width), pic);	
+	
+	//GPS Coordinates
+	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.25, Screen.width*.5, Screen.width*0.4), "GPS Coordinates:");
+	
+	//X Loc
+	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.3, Screen.width*.4, Screen.width*0.4), "X Loc: "+ Input.location.lastData.latitude);
+	//Y Loc
+	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.35, Screen.width*.4, Screen.width*0.4), "Y Loc: "+ Input.location.lastData.longitude);
+	//Altitude
+	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.4, Screen.width*.4, Screen.width*0.4), "Altitude: "+ Input.location.lastData.altitude);
+	
+	//Description Label
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.55, Screen.width*.4, Screen.width*0.4), "Description: ");
+	
+	//Description Text Field
+	newMissionDescriptions = GUI.TextField(Rect(Screen.width*0.1,Screen.height*0.6, Screen.width*.4, Screen.width*0.4), newMissionDescriptions);
+	
+	//GoogleMaps
+	GUI.DrawTexture(Rect(Screen.width*0.55,Screen.height*0.55, Screen.width*.4, Screen.width*0.4), googleMapPicture);
+	
+	//Submit LandmarkButton	
 	GUI.Box(Rect(0,Screen.height-Screen.height*0.1,Screen.width, Screen.height*0.1),"");
-	if(GUI.Button(Rect(1,Screen.height-Screen.height*0.1+1,Screen.width-2, Screen.height*0.1-2), "Submit Landmark")){submitLandmark();}
+	if(GUI.Button(Rect(1,Screen.height-Screen.height*0.1+1,Screen.width-2, Screen.height*0.1-2), "SEND REQUEST TO ADMIN")){submitLandmark();}
+	
 }
 
 function Update() {
@@ -291,15 +420,15 @@ function Rad(d : double) {
 }
 
 function submitLandmark() {
-	yield server.createMission(newMissionName, newMissionDescriptions, newMissionTags,
+	server.createMission(newMissionName, newMissionDescriptions, newMissionTags,
 							 Input.location.lastData.latitude, Input.location.lastData.longitude, 
 							 Input.location.lastData.altitude, Input.location.lastData.horizontalAccuracy);
 	
-	yield server.updateMissions();
+	server.updateMissions();
 	currentPage = lndmrksPage.viewLandmarks;
 }
 
 function deleteLandmark(n : String) {
 	server.deleteMission(n);
-	yield server.updateMissions();
+	server.updateMissions();
 }

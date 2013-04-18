@@ -55,6 +55,7 @@
      <Compile Include="Assets\scripts\Md5.js" />
      <Compile Include="Assets\scripts\ServerController.js" />
      <Compile Include="Assets\scripts\UserInterface.js" />
+     <Compile Include="Assets\scripts\WebCamFeed.js" />
      <None Include="Assets\UniWeb\README.txt" />
      <None Include="Assets\GoogleMaps\README.txt" />
      <None Include="Assets\GUISkin\ReadMe.txt" />

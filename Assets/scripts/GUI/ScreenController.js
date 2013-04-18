@@ -59,15 +59,17 @@ function OnGUI() {
 		//GUI.Button(Rect(1, 1, Screen.width-2, Screen.height*0.1),"GeoSeeker");
 		
 		Profile.draw();
-	} else {
-		//Top toolbar
-		GUI.Box(Rect(0,0,Screen.width, Screen.height*0.1+2),"");
-		toolbarInt = GUI.Toolbar (Rect(1, 1, Screen.width-2, Screen.height*0.1), toolbarInt, toolbarStrings);
-	
+	} else {	
 		//Draws the active Screen
 		if(toolbarInt == 0) {Profile.draw(); switchBackToViewAllLandmarks();}
 		else if(toolbarInt == 1) {Mission.draw();}
 		else if(toolbarInt == 2) {Leaderboard.draw(); switchBackToViewAllLandmarks();}
+		
+		//Top toolbar
+		GUI.Box(Rect(0,0,Screen.width, Screen.height*0.1+2),"");
+		toolbarInt = GUI.Toolbar (Rect(1, 1, Screen.width-2, Screen.height*0.1), toolbarInt, toolbarStrings);
+
+		
 	}
 	
 

@@ -12,6 +12,7 @@ var passRect : Rect;
 var passFieldRect : Rect;
 
 var loginImage : Texture;
+var logoImage : Texture;	
 
 enum profilePage {Login, Register, Profile}
 var currentPage = profilePage.Login;
@@ -24,11 +25,12 @@ function Start() {
 }
 
 function draw () {
-	//Background Image
-	GUI.DrawTexture(Rect(0,0,Screen.width,Screen.height),loginImage, ScaleMode.StretchToFill,true,1);
-	//GUI.Box(new Rect(0,0, Screen.width, Screen.height),"");
-	
+		
 	if (PlayerPrefs.GetString("PlayerID").Equals("")) {
+		//Background Image
+		GUI.DrawTexture(Rect(0,0,Screen.width,Screen.height),loginImage, ScaleMode.StretchToFill,true,1);
+		GUI.DrawTexture(Rect(0,0,logoImage.width,logoImage.height),logoImage,ScaleMode.ScaleToFit,true,1);
+		
 		if (currentPage == profilePage.Login){
 			showLogin();		
 		} else {
@@ -39,6 +41,7 @@ function draw () {
 		showLogin();
 		GUI.Label(Rect(Screen.width*.1,Screen.height*.6, Screen.width,screen.rowHeight),"Wrong Username/Password");
 	} else {
+		GUI.Box(new Rect(0,0, Screen.width, Screen.height),"");
 		showProfile();
 	}
 }
@@ -64,7 +67,7 @@ function showProfile() {
 	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*2, Screen.width,screen.rowHeight), PlayerPrefs.GetString("PlayerName"));
 	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*3, Screen.width,screen.rowHeight), "ID: " + PlayerPrefs.GetString("PlayerID"));	
 	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*4, Screen.width,screen.rowHeight), "Points: " + PlayerPrefs.GetString("PlayerPoints"));
-	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*5, Screen.width,screen.rowHeight), "Rank: " + "None");
+	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*5, Screen.width,screen.rowHeight), "Rank: " + "Freshman");
 	GUI.Label(Rect(Screen.width*.1,screen.rowHeight*6, Screen.width,screen.rowHeight), "Landmarks: ");
 	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*7, Screen.width,screen.rowHeight), "Visited: " + PlayerPrefs.GetString("PlayerCompleted"));
 	GUI.Label(Rect(Screen.width*.15,screen.rowHeight*8, Screen.width,screen.rowHeight), "Dominated: " + "None");

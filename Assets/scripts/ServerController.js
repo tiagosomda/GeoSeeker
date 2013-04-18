@@ -139,9 +139,13 @@ function getCompletedMissions() {
     }
 }
 
-function dominateLandmark(missionId : String) {
-	var dominateLandmarkUrl = dominateLandmarkUrl + "userId="+PlayerPrefs.GetString("PlayerID") + "&landmarkId="+missionId;
+function dominateLandmark(index : int) {
+	var dominateLandmarkUrl = dominateLandmarkUrl + "userId="+PlayerPrefs.GetString("PlayerID") + "&landmarkId="+landmarks[index].id;
 	var url_request = WWW(dominateLandmarkUrl);
+	
+	landmarks[index].ownerId = PlayerPrefs.GetString("PlayerID");
+	landmarks[index].ownerName = PlayerPrefs.GetString("PlayerName");
+	landmarks[index].ownerPoints = PlayerPrefs.GetString("PlayerPoints");
 
 	yield url_request;
 	
@@ -169,11 +173,9 @@ function deleteMission(n : String) {
 	
 }
 
-function completeMission(userId : String, missionId : String){
-	//Sets local list of missions to completed
-	PlayerPrefs.SetString("Mission"+missionId,"completed");
+function completeMission(index : int){
 	//Creates URL to update list of completed missions by a user on the server
-	var completeMissionUrl = completeMissionUrl + "userId="+userId+"&missionId="+missionId;
+	var completeMissionUrl = completeMissionUrl + "userId="+PlayerPrefs.GetString("PlayerID")+"&missionId="+landmarks[index].id;
 	server_post = WWW(completeMissionUrl);
 	
 	yield server_post;
@@ -181,7 +183,9 @@ function completeMission(userId : String, missionId : String){
 	if(server_post.error) {
         print("There was an error compeleting the mission: " + server_post.error);
     } else {
-       getUserInfo();
+		//Sets local list of missions to completed
+    	PlayerPrefs.SetString(PlayerPrefs.GetString("PlayerID")+"Mission"+landmarks[index].id,"completed");
+       	getUserInfo();
     }
   
  	//Updates local list of missions to completed - might not be necessary.
