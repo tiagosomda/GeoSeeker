@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class RectGoogleMap : MonoBehaviour {
-
+	public GUISkin skin;
 	public enum MapType
 	{
 		RoadMap,
@@ -19,11 +19,29 @@ public class RectGoogleMap : MonoBehaviour {
 	public bool doubleResolution = false;
 	public GoogleMapMarker[] markers;
 	public GoogleMapPath[] paths;
+	private Texture2D googleMapTexture;
+
 	
 	void Start() {
 		if(loadOnStart) Refresh();	
 	}
 	
+	void OnEnable() {
+		centerLocation.latitude = PlayerPrefs.GetFloat("GMAPLAT");
+		centerLocation.longitude = PlayerPrefs.GetFloat("GMAPLOG");
+		Refresh();
+	}
+	void OnGUI() {
+		if (skin != null){GUI.skin = skin;}
+		GUI.depth = -9;
+		if (googleMapTexture !=  null) {
+			GUI.DrawTexture(new Rect(0,0,Screen.width,Screen.height), googleMapTexture);	
+		}
+		
+		if(GUI.Button(new Rect(0,Screen.height*0.9f,Screen.width,Screen.height*0.1f), "Back")) {
+			gameObject.SetActive(false);	
+		}
+	}
 	public void Refresh() {
 		if(autoLocateCenter && (markers.Length == 0 && paths.Length == 0)) {
 			Debug.LogError("Auto Center will only work if paths or markers are used.");	
@@ -84,6 +102,7 @@ public class RectGoogleMap : MonoBehaviour {
 			tex.LoadImage (req.response.Bytes);
 			//renderer.material.mainTexture = tex;
 			guiTexture.texture = tex;
+			googleMapTexture = tex;
 		}
 	}
 	

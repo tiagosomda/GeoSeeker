@@ -199,7 +199,6 @@ function getUserInfo(){
 	
 	yield server_post;
 	
-	print(getUserInfoUrl);
 	if(server_post.error) {
         print("There was an error getting the user info: " + server_post.error);
     } else {
@@ -210,8 +209,6 @@ function getUserInfo(){
     	PlayerPrefs.SetString("PlayerCompleted", temp[3]);
     	PlayerPrefs.SetString("PlayerDominatedId", temp[4]);
     	PlayerPrefs.SetString("PlayerDominatedName", temp[5]);
-    	
-    	print("D ID" + temp[4]);
     }
 }
 

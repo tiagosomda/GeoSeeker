@@ -19,11 +19,6 @@ static var previousToolbarInt = 0;
 var currentOrientation : DeviceOrientation;
 var btnFontSize : float;
 
-//Custom GUIStyle Names
-var btnActiveStyleName = "pButtonActive";
-var btnInactiveStyleName = "pButtonInactive";
-var topTabBtnsState = [btnActiveStyleName, btnInactiveStyleName, btnInactiveStyleName];
-
 function Start () {
 	server.getCompletedMissions();
 	
@@ -67,12 +62,26 @@ function OnGUI() {
 		
 		//Top toolbar
 		GUI.Box(Rect(0,0,Screen.width, Screen.height*0.1+2),"");
-		toolbarInt = GUI.Toolbar (Rect(1, 1, Screen.width-2, Screen.height*0.1), toolbarInt, toolbarStrings);
-
+		previousToolbarInt = GUI.Toolbar (Rect(1, 1, Screen.width-2, Screen.height*0.1), toolbarInt, toolbarStrings);
+		
+		if(previousToolbarInt != toolbarInt) {
+			toolbarInt = previousToolbarInt;
+			switchScreen(previousToolbarInt);
+		}
 		
 	}
 	
 
+}
+
+function switchScreen(selection : int) {
+	if(selection == 0) {
+		server.getUserInfo();
+	} else if(selection == 1) {
+		server.updateMissions();
+	} else if (selection == 2) { 
+		server.getLeaderboardInfo();
+	}
 }
 
 function switchBackToViewAllLandmarks() {

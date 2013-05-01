@@ -4,6 +4,20 @@ var lo : int;
 var at : int;
 var ha : int;
 var counter : int;
+var timeCounter : float;
+var updateTime = 20.0f;
+
+function Start() {
+	timeCounter = updateTime;
+}
+function Update() {
+	//Updates current gps location every 20 seconds
+	timeCounter -= Time.deltaTime;
+	if(timeCounter < 0) {
+		timeCounter = updateTime;
+		getLocation();
+	}
+}
 
 function getLocation () {
     // First, check if user has location service enabled

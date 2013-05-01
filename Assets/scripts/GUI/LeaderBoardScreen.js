@@ -19,6 +19,8 @@ private var windowMargin : Vector2;
 private var listMargin : Vector2;
 private var windowRect :Rect ;
 
+public var googleMapMarker : Texture;
+
 function Start() {
 	server.getLeaderboardInfo();
 }
@@ -35,12 +37,13 @@ function showLeaderboard() {
 	GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"","lightRed");
 	
 	//Rank
-	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.15,Screen.width*0.3,Screen.height*0.1),"Rank", "text2");
+	GUI.Label(Rect(0,Screen.height*0.12,Screen.width*0.3,Screen.height*0.1),"Rank", "leaderboardHeader");
 	//Name
-	GUI.Label(Rect(Screen.width*0.4,Screen.height*0.15,Screen.width*0.3,Screen.height*0.1),"Player", "text2");
-	
+	GUI.Label(Rect(Screen.width*0.3,Screen.height*0.12,Screen.width*0.2,Screen.height*0.1),"Player", "leaderboardHeader");
 	//Points
-	GUI.Label(Rect(Screen.width*0.7,Screen.height*0.15,Screen.width*0.3,Screen.height*0.1),"Points", "text2");
+	GUI.Label(Rect(Screen.width*0.5,Screen.height*0.12,Screen.width*0.2,Screen.height*0.1),"Points", "leaderboardHeader");
+	//Landmark
+	GUI.Label(Rect(Screen.width*0.7,Screen.height*0.12,Screen.width*0.3,Screen.height*0.1),"Landmark", "leaderboardHeader");
 	
 	//Draws Leaderboard
 	numRows = server.leaderboardList.Length;
@@ -48,10 +51,11 @@ function showLeaderboard() {
 		var i = 0;
 		scrollPosition = GUI.BeginScrollView(Rect(0, screen.rowHeight*2, Screen.width, Screen.height*0.9), scrollPosition, Rect(0, 0, Screen.width, (Screen.height*0.1)*(numRows-1)));
 			for (i = 0; i < server.leaderboardList.Length-1; i++) {
-				//GUI.Box(Rect(0,screen.rowHeight*i, Screen.width,screen.rowHeight),"");
-				GUI.Label(Rect(Screen.width*0.05, screen.rowHeight*i+1, screen.rowWidth, screen.rowHeight-2),(i+1).ToString() + " : Freshman", "text3");
-				GUI.Label(Rect(Screen.width*0.4,screen.rowHeight*i+1, screen.rowWidth, screen.rowHeight-2),PlayerPrefs.GetString("RankName"+i), "text3");	
-				GUI.Label(Rect(Screen.width*0.75,screen.rowHeight*i+1,screen.rowWidth, screen.rowHeight-2), PlayerPrefs.GetString("RankPoints"+i), "text3");
+				GUI.Label(Rect(0, screen.rowHeight*i, Screen.width*0.25, screen.rowHeight-2),"Freshman", "leaderboardBody");
+				GUI.Label(Rect(Screen.width*0.3,screen.rowHeight*i, Screen.width*0.2, screen.rowHeight-2),PlayerPrefs.GetString("RankName"+i), "leaderboardBody");	
+				GUI.Label(Rect(Screen.width*0.5,screen.rowHeight*i, Screen.width*0.2, screen.rowHeight-2), PlayerPrefs.GetString("RankPoints"+i), "leaderboardBody");
+				//GUI.Label(Rect(Screen.width*0.7,screen.rowHeight*i+1, Screen.width*0.3, screen.rowHeight-2), PlayerPrefs.GetString("RankPoints"+i), "leaderboardBody");
+				GUI.DrawTexture(Rect(Screen.width*0.85,screen.rowHeight*i, Screen.width*0.05, Screen.width*0.1),googleMapMarker);
 			}
 		GUI.EndScrollView ();
 	} else {

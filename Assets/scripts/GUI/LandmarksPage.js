@@ -5,12 +5,12 @@ var server : ServerController;
 var location : LocationController;
 
 var cameraFeed : GameObject;
+var googleMap : GameObject;
 var exitScreen : GameObject;
-var googleMap : LandmarkGoogleMap;
 var completedSound : AudioClip;
 var dominateSound : AudioClip;
 
-enum lndmrksPage { viewLandmarks, createLandmark, viewLandmark}
+enum lndmrksPage { viewLandmarks, createLandmark, viewLandmark, cameraFeed}
 var currentPage : lndmrksPage;
 
 private var newMissionName : String;
@@ -19,7 +19,7 @@ private var newMissionTags : String;
 
 private var viewingLandmarkIndex : int;
 private var lastDistance : double;
-
+public var  targetPicture : Texture;
 public var 	landmarkPicture : Texture;
 public var  googleMapPicture : Texture;
 
@@ -131,26 +131,33 @@ function showSingleLandmark(index : int) {
 	GUI.Label(Rect(0,Screen.height*0.15, Screen.width, Screen.width*0.1), server.landmarks[index].name, "title");
 	
 	//Landmark Picture
-	GUI.DrawTexture(Rect(Screen.width*0.1,Screen.height*0.25, Screen.width*.4, Screen.width*0.4),landmarkPicture);	
+	GUI.DrawTexture(Rect(Screen.width*0.1,Screen.height*0.25, Screen.width*.7, Screen.width*0.4),landmarkPicture);		
 	
-	//DominatedBy
-	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.3, Screen.width*.4, Screen.width*0.4), "Dominated By:", "text2");
+	//Target Picture
+	GUI.DrawTexture(Rect(Screen.width*0.85,Screen.height*0.25, Screen.width*0.1, Screen.width*0.15),targetPicture);
+	//Target Button
+	if(GUI.Button(Rect(Screen.width*0.85,Screen.height*0.25, Screen.width*0.1, Screen.width*0.15),"","transparentButton")){
+		PlayerPrefs.SetFloat("GMAPLAT",float.Parse(server.landmarks[index].lat));
+		PlayerPrefs.SetFloat("GMAPLOG",float.Parse(server.landmarks[index].log));
+		googleMap.SetActive(true);
+	}
 	
-	//OwnerName
-	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.35, Screen.width*.4, Screen.width*0.4), "Owner", "text3");
-	GUI.Label(Rect(Screen.width*0.55,Screen.height*0.4, Screen.width*.4, Screen.width*0.4), server.landmarks[index].ownerName, "text3");
+	//Landmark Points
+	GUI.Label(Rect(Screen.width*0.83,Screen.height*0.38, Screen.width*.15, Screen.width*0.4), "Points:", "text3");
+	GUI.Label(Rect(Screen.width*0.85,Screen.height*0.43, Screen.width*.15, Screen.width*0.4), "50", "text3");
 	
-	//OwnerPoints
-	GUI.Label(Rect(Screen.width*0.8,Screen.height*0.35, Screen.width*.4, Screen.width*0.4), "Points", "text3");
-	GUI.Label(Rect(Screen.width*0.8,Screen.height*0.4, Screen.width*.4, Screen.width*0.4), server.landmarks[index].ownerPoints, "text3");
-	
+	//Owner Name
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.5, Screen.width*.8, Screen.width*0.4), "Owner: " + server.landmarks[index].ownerName, "text3");
+	//Owner Points
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.55, Screen.width*.8, Screen.width*0.4), "Points: " + server.landmarks[index].ownerPoints, "text3");
+		
 	//Description Label
-	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.55, Screen.width*.4, Screen.width*0.4), "Description: ", "text2");
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.6, Screen.width*.8, Screen.width*0.4), "Description: ", "text2");
 	//Description Text
-	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.6, Screen.width*.4, Screen.width*0.4), server.landmarks[index].description, "text3");
+	GUI.Label(Rect(Screen.width*0.1,Screen.height*0.65, Screen.width*.8, Screen.width*0.4), server.landmarks[index].description, "text3");
 	
 	//GoogleMaps
-	GUI.DrawTexture(Rect(Screen.width*0.55,Screen.height*0.55, Screen.width*.4, Screen.width*0.4), googleMapPicture);
+	//GUI.DrawTexture(Rect(Screen.width*0.55,Screen.height*0.55, Screen.width*.4, Screen.width*0.4), googleMapPicture);
 
 }
 
@@ -184,7 +191,13 @@ function showLandmarks() {
 						checkMissionLocation();
 						showSingleLandmark(i);
 					}
-					GUI.Label(Rect(0, screen.rowHeight*i + screen.rowHeight*0.2, Screen.width,screen.rowHeight), server.landmarks[i].name, "text");
+					//Landmark Title
+					GUI.Label(Rect(Screen.width*0.1, screen.rowHeight*i + screen.rowHeight*0.2, Screen.width,screen.rowHeight), server.landmarks[i].name, "text");
+					
+					//Distance to Landmark
+					var distance = getDistance(Input.location.lastData.latitude,Input.location.lastData.longitude,
+				       		   				   float.Parse(server.landmarks[i].lat), float.Parse(server.landmarks[i].log));
+					GUI.Label(Rect(Screen.width*0.1, screen.rowHeight*i + screen.rowHeight*0.4, Screen.width*0.8,screen.rowHeight), distance.ToString(), "distanceText");
 				}	   	
 			}
 		GUI.EndScrollView ();
@@ -192,7 +205,7 @@ function showLandmarks() {
 		GUI.Button(new Rect(0,screen.rowHeight*2 - screen.rowHeight/2, Screen.width, screen.rowHeight), "No Missions");	
 	}
 	
-	//Surrounding Box and Button to create a New Mission
+	//Surrounding Box and Button to create a New Landmark
 	GUI.Box(Rect(0,Screen.height-Screen.height*0.1,Screen.width,Screen.height*0.1),"");
 	if(GUI.Button(Rect(1,Screen.height*0.9+1,Screen.width-2, Screen.height*0.1-2),"Create New Landmark")){currentPage = lndmrksPage.createLandmark; location.getLocation();}
 }
@@ -203,7 +216,7 @@ function createLandmark() {
 	GUI.Box(Rect(0,Screen.height*0.1, Screen.width, Screen.height*0.8),"");
 
 	//LandmarkName Field
-	newMissionName = GUI.TextField(Rect(Screen.width*0.1,Screen.height*0.15, Screen.width*.8, screen.rowHeight*0.7), newMissionName,20);
+	newMissionName = GUI.TextField(Rect(Screen.width*0.1,Screen.height*0.15, Screen.width*.8, screen.rowHeight*0.7), newMissionName,15);
 	
 	//Selects Picture or Photo Image
 	var pic : Texture;
@@ -216,6 +229,7 @@ function createLandmark() {
 
 	if(GUI.Button(Rect(Screen.width*0.1,Screen.height*0.25, Screen.width*.4, Screen.width*0.4),"")) {
 		cameraFeed.SetActive(true);
+		currentPage = lndmrksPage.cameraFeed;
 		pictureTaken = false;
 	}
 	
@@ -253,6 +267,11 @@ function Update() {
 	if (Input.GetKeyDown(KeyCode.Escape)) {
 		if (currentPage == lndmrksPage.viewLandmarks) {
 			exitScreen.SetActive(true);
+		} else if(currentPage == lndmrksPage.createLandmark || currentPage == lndmrksPage.viewLandmark) {
+			currentPage = lndmrksPage.viewLandmarks;
+		} else if(currentPage == lndmrksPage.cameraFeed) {
+			currentPage = lndmrksPage.viewLandmarks;
+			cameraFeed.SetActive(false);
 		}
 	}
 	checkForTouch();

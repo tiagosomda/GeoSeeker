@@ -16,7 +16,7 @@ function OnGUI() {
 	GUI.depth = -10;
 	//Draws Black Screen
 	GUI.Box(Rect(-5,-5,Screen.width+10,Screen.height+10),"","blackbox70");
-	GUI.Label(exitMessageRect,"Do you want to exit?");
+	GUI.Label(exitMessageRect,"Do you want to exit?", "text");
 	
 	//Yes Exit
 	if (GUI.Button(exitYesRect,"Yes")) {

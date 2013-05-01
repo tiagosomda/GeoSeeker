@@ -77,10 +77,10 @@ function showProfile() {
 	GUI.Label(Rect(0,Screen.height*0.15, Screen.width, Screen.height*0.1), PlayerPrefs.GetString("PlayerName"), "title");
 	
 	//Points
-	GUI.Label(Rect(0,Screen.height*0.3, Screen.width, Screen.height*0.1),"Points: " + PlayerPrefs.GetString("PlayerPoints"), "text");
+	GUI.Label(Rect(0,Screen.height*0.3, Screen.width, Screen.height*0.1),"Points: " + PlayerPrefs.GetString("PlayerPoints"), "profileText");
 	
 	//Ranks
-	GUI.Label(Rect(0,Screen.height*0.4, Screen.width, Screen.height*0.1),"Rank: " + "Freshamn", "text");
+	GUI.Label(Rect(0,Screen.height*0.4, Screen.width, Screen.height*0.1),"Rank: " + "Freshman", "profileText");
 	
 	//Rank Image
 	GUI.DrawTexture(Rect(Screen.width*0.8,Screen.height*0.38, Screen.width*.15, Screen.width*.15),rankImage);
@@ -90,14 +90,14 @@ function showProfile() {
 	
 	//Visited vs Total
 	//GUI.Label(Rect(0,Screen.height*0.3, Screen.width, Screen.height*0.1),"Points: " + PlayerPrefs.GetString("PlayerPoints"), "text");
-	GUI.Label(Rect(0,Screen.height*0.65, Screen.width, Screen.height*0.1),"Visited: " + PlayerPrefs.GetString("PlayerCompleted"), "text");
+	GUI.Label(Rect(0,Screen.height*0.65, Screen.width, Screen.height*0.1),"Visited: " + PlayerPrefs.GetString("PlayerCompleted"), "profileText");
 	
 	//Owned Landmark
 	//print(PlayerPrefs.GetString("PlayerDominatedName"));
 	if (PlayerPrefs.GetString("PlayerDominatedName") != "") {
-		GUI.Label(Rect(0,Screen.height*0.75, Screen.width, Screen.height*0.1),"Dominates " + PlayerPrefs.GetString("PlayerDominatedName"), "text");
+		GUI.Label(Rect(0,Screen.height*0.75, Screen.width, Screen.height*0.1),"Owner of " + PlayerPrefs.GetString("PlayerDominatedName"), "profileText");
 	} else {
-		GUI.Label(Rect(0,Screen.height*0.75, Screen.width, Screen.height*0.1),"Dominates " + "Nothing!", "text");
+		GUI.Label(Rect(0,Screen.height*0.75, Screen.width, Screen.height*0.1),"Owner of " + "Nothing!", "profileText");
 	}
 	//Logout Button		
 	GUI.Box(Rect(0,Screen.height*.9, Screen.width,screen.rowHeight),"");

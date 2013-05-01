@@ -45,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\scripts\GUI\ExitScreen.js" />
-     <Compile Include="Assets\scripts\GUI\LandmarkGoogleMap.js" />
      <Compile Include="Assets\scripts\GUI\LandmarksPage.js" />
      <Compile Include="Assets\scripts\GUI\LeaderBoardScreen.js" />
      <Compile Include="Assets\scripts\GUI\ProfileScreen.js" />
